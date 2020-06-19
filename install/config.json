@@ -1,0 +1,22 @@
+{
+	"server": {
+		"subscription": "Visual Studio Professional Subscription",
+		"resourcegroupname": "resourcegroupdwh",
+		"location": "West Europe",
+		"servername": "sqlsrvdwh",
+		"startip": "188.122.18.4",
+		"endip": "188.122.18.255"
+	},
+	"database": {
+		"databaseName": "dbdwh",
+		"adminLogin": "etlusr",
+		"adminPass": "P@ssword123"
+	},
+	"path": {
+		"LogFile": "C:\\tabcmd\\log.txt",
+		"CsvFile": "C:\\tabcmd\\reports.csv",
+		"ReportFolder": "C:\\tabcmd\\reports",
+		"MainFolder": "C:\\tabcmd",
+		"Tabcmd": "C:\\Program Files\\Tableau\\Tableau Server\\2019.4\\extras\\Command Line Utility"
+	}
+}

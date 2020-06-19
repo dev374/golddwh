@@ -1,0 +1,563 @@
+{
+    "name": "dat_customers",
+    "properties": {
+        "activities": [
+            {
+                "name": "dat_customers",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "Log loading start",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [
+                    {
+                        "name": "Source",
+                        "value": "loaddata/in/"
+                    },
+                    {
+                        "name": "Destination",
+                        "value": "adf.@{pipeline().Pipeline}"
+                    },
+                    {
+                        "name": "PipelineTime",
+                        "value": "@pipeline().TriggerTime"
+                    }
+                ],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "wildcardFileName": {
+                                "value": "*@{pipeline().parameters.name}*.csv",
+                                "type": "Expression"
+                            },
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "AzureSqlSink",
+                        "tableOption": "autoCreate"
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "mappings": [
+                            {
+                                "source": {
+                                    "name": "CustomerKey",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "CustomerKey",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "GeographyKey",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "GeographyKey",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "CustomerAlternateKey",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "CustomerAlternateKey",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "Title",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "Title",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FirstName",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "FirstName",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "MiddleName",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "MiddleName",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "LastName",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "LastName",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "NameStyle",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "NameStyle",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "BirthDate",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "BirthDate",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "MaritalStatus",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "MaritalStatus",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "Suffix",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "Suffix",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "Gender",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "Gender",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "EmailAddress",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "EmailAddress",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "YearlyIncome",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "YearlyIncome",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "TotalChildren",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "TotalChildren",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "NumberChildrenAtHome",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "NumberChildrenAtHome",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "EnglishEducation",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "EnglishEducation",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "SpanishEducation",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "SpanishEducation",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FrenchEducation",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "FrenchEducation",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "EnglishOccupation",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "EnglishOccupation",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "SpanishOccupation",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "SpanishOccupation",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "FrenchOccupation",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "FrenchOccupation",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "HouseOwnerFlag",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "HouseOwnerFlag",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "NumberCarsOwned",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "NumberCarsOwned",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "AddressLine1",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "AddressLine1",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "AddressLine2",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "AddressLine2",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "Phone",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "Phone",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "DateFirstPurchase",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "DateFirstPurchase",
+                                    "type": "String"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "name": "CommuteDistance",
+                                    "type": "String"
+                                },
+                                "sink": {
+                                    "name": "CommuteDistance",
+                                    "type": "String"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "src_blob_in",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "dst_sql_in",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "pipelinename": "@pipeline().Pipeline",
+                            "pipelinerunid": "@pipeline().RunId"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "Log loading start",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[whs_log_load]",
+                    "storedProcedureParameters": {
+                        "pipeline_name": {
+                            "value": {
+                                "value": "@{pipeline().Pipeline}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "run_id": {
+                            "value": {
+                                "value": "@pipeline().RunId",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "start_dttm": {
+                            "value": {
+                                "value": "@{utcnow()}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "action": {
+                            "value": "load STARTED",
+                            "type": "String"
+                        },
+                        "file_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.name",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureSqlDatabase1",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "Log loading finish",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "dat_customers",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[whs_log_load]",
+                    "storedProcedureParameters": {
+                        "pipeline_name": {
+                            "value": {
+                                "value": "@{pipeline().Pipeline}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "run_id": {
+                            "value": {
+                                "value": "@pipeline().RunId",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "start_dttm": {
+                            "value": {
+                                "value": "@{utcnow()}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "action": {
+                            "value": {
+                                "value": "COMPLETED",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "file_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.name",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureSqlDatabase1",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "Log loading finish error",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "dat_customers",
+                        "dependencyConditions": [
+                            "Failed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[whs_log_load]",
+                    "storedProcedureParameters": {
+                        "pipeline_name": {
+                            "value": {
+                                "value": "@{pipeline().Pipeline}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "run_id": {
+                            "value": {
+                                "value": "@pipeline().RunId",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "start_dttm": {
+                            "value": {
+                                "value": "@{utcnow()}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "action": {
+                            "value": {
+                                "value": "@activity('dat_customers').error",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "file_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.name",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureSqlDatabase1",
+                    "type": "LinkedServiceReference"
+                }
+            }
+        ],
+        "parameters": {
+            "name": {
+                "type": "string",
+                "defaultValue": "customers"
+            }
+        },
+        "annotations": []
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

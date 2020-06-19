@@ -1,0 +1,268 @@
+{
+    "name": "dat_subcategories",
+    "properties": {
+        "activities": [
+            {
+                "name": "dat_subcategories",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "Log loading start",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [
+                    {
+                        "name": "Source",
+                        "value": "loaddata/in/"
+                    },
+                    {
+                        "name": "Destination",
+                        "value": "adf.@{pipeline().Pipeline}"
+                    },
+                    {
+                        "name": "PipelineTime",
+                        "value": "@pipeline().TriggerTime"
+                    }
+                ],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "wildcardFileName": {
+                                "value": "*@{pipeline().parameters.name}*.csv",
+                                "type": "Expression"
+                            },
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "AzureSqlSink",
+                        "tableOption": "autoCreate"
+                    },
+                    "enableStaging": false
+                },
+                "inputs": [
+                    {
+                        "referenceName": "src_blob_in",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "dst_sql_in",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "pipelinename": "@pipeline().Pipeline",
+                            "pipelinerunid": "@pipeline().RunId"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "Log loading start",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[whs_log_load]",
+                    "storedProcedureParameters": {
+                        "pipeline_name": {
+                            "value": {
+                                "value": "@{pipeline().Pipeline}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "run_id": {
+                            "value": {
+                                "value": "@pipeline().RunId",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "start_dttm": {
+                            "value": {
+                                "value": "@{utcnow()}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "action": {
+                            "value": "load STARTED",
+                            "type": "String"
+                        },
+                        "file_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.name",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureSqlDatabase1",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "Log loading finish",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "dat_subcategories",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[whs_log_load]",
+                    "storedProcedureParameters": {
+                        "pipeline_name": {
+                            "value": {
+                                "value": "@{pipeline().Pipeline}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "run_id": {
+                            "value": {
+                                "value": "@pipeline().RunId",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "start_dttm": {
+                            "value": {
+                                "value": "@{utcnow()}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "action": {
+                            "value": {
+                                "value": "COMPLETED",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "file_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.name",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureSqlDatabase1",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "Log loading finish error",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "dat_subcategories",
+                        "dependencyConditions": [
+                            "Failed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[whs_log_load]",
+                    "storedProcedureParameters": {
+                        "pipeline_name": {
+                            "value": {
+                                "value": "@{pipeline().Pipeline}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "run_id": {
+                            "value": {
+                                "value": "@pipeline().RunId",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "start_dttm": {
+                            "value": {
+                                "value": "@{utcnow()}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "action": {
+                            "value": {
+                                "value": "@activity('dat_subcategories').error",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "file_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.name",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureSqlDatabase1",
+                    "type": "LinkedServiceReference"
+                }
+            }
+        ],
+        "parameters": {
+            "name": {
+                "type": "string",
+                "defaultValue": "subcategories"
+            }
+        },
+        "annotations": []
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
