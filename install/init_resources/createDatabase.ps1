@@ -1,18 +1,35 @@
-# Connect-AzAccount
-Select-AzSubscription -Subscription "Visual Studio Professional Subscription"
+# Config load
+$c = Get-Content .\config.json | ConvertFrom-Json
 
-# New database?
-$databaseName = "dbdw-etl"
-$objective = "S0"
+if(!$c) { 
+	echo 'Empty config. Load config first'
+	exit
+}
 
-# Variables with DevNet IP
-$resourceGroupName = "resourcegroup01"
-$location = "West Europe"
-$serverName = "sqlsrvdw"
-$startIp = "188.122.18.4"
-$endIp = "188.122.18.255"
+# Variables - set the resource group name, location, servername, database and allowed IP range
+$global:resourceGroupName = $c.server.resourcegroupname
+$global:serverName = $c.server.servername
+$global:databaseName = $c.database.databaseName
+$global:objective = $c.database.objective
 
-# Create a blank database with an B performance level
+
+# Create a blank database with given performance level
+$db = Get-AzSQLDatabase -ServerName $serverName -ResourceGroupName $resourceGroupName 
+$rgnarray = @()
+ForEach ($r in $rgn.resourcegroupname) {
+	$rgnarray += $r
+}
+if($rgnarray -like $resourceGroupName) {
+	echo "The resourcegroup: $resourceGroupName already exists"
+} else {
+	echo "OK new resourcegroup is $resourceGroupName" 
+
+    # Create resourcegroupname
+	$resourceGroup = New-AzResourceGroup -Name $resourceGroupName -Location $location
+}
+
+
+# Create a blank database with given performance level
 $database = New-AzSqlDatabase  -ResourceGroupName $resourceGroupName `
     -ServerName $serverName `
     -DatabaseName $databaseName `

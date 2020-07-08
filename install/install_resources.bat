@@ -1,1 +1,0 @@
-powershell.exe -File .\init_resources\hello.ps1

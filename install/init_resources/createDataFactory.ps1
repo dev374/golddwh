@@ -1,26 +1,18 @@
-# Connect-AzAccount
-Select-AzSubscription -Subscription "Visual Studio Professional Subscription"
-Register-AzResourceProvider -ProviderNamespace Microsoft.DataFactory
+# Config load
+$c = Get-Content .\config.json | ConvertFrom-Json
 
-# New database?
-$databaseName = "dbdw-etl"
-$objective = "S0"
+if(!$c) { 
+	echo 'Empty config. Load config first'
+	exit
+}
 
-# Variables with DevNet IP
-$resourceGroupName = "resourcegroup01"
-$location = "West Europe"
-$name = "datafactorydwv2"
+# Variables - set the resource group name, location, servername, database and allowed IP range
+$global:datafactoryname = $c.datafactory.datafactoryname
 
 write-host "
-Perform these operations in the following order:
-Create a data factory.
-Create linked services.
-Create datasets.
-Create a pipeline.
-
 Creating a new DF..."
 
-# Create 
-$df = New-AzDataFactoryV2  -ResourceGroupName $resourceGroupName `
-    -Name $name `
+# Create DF
+$df = New-AzDataFactoryV2 -ResourceGroupName $resourceGroupName `
+    -Name $datafactoryname `
     -Location $location

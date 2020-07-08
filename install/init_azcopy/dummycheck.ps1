@@ -1,0 +1,1 @@
+echo "Dummycheck - working OK"

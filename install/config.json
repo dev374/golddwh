@@ -10,13 +10,20 @@
 	"database": {
 		"databaseName": "dbdwh",
 		"adminLogin": "etlusr",
-		"adminPass": "P@ssword123"
+		"adminPass": "P@ssword123",
+		"objective": "Basic"
 	},
 	"path": {
-		"LogFile": "C:\\tabcmd\\log.txt",
-		"CsvFile": "C:\\tabcmd\\reports.csv",
-		"ReportFolder": "C:\\tabcmd\\reports",
-		"MainFolder": "C:\\tabcmd",
-		"Tabcmd": "C:\\Program Files\\Tableau\\Tableau Server\\2019.4\\extras\\Command Line Utility"
+		"logfile": "C:\\tabcmd\\log.txt",
+		"install": "c:\\Dev\\golddwh\\install\\",
+		"adflinkedservices": "c:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\",
+		"adflinkedservicesblobfile": "conn_blobstorage.json"
+	},
+	"datafactory": {
+		"datafactoryname": "datafactorydwhv2"
+	},
+	"storage": {
+		"storagename": "stordwhgold",
+		"storagekey": "p1d2Ng1ZtlaIv/nqA9JDy0Za3YB4DBuUUOSncRP85RqPqVoSeHdeu+q7CU7vl6HBW7ZIFqqNNC/xUc0RqcDVhw=="
 	}
 }

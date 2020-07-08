@@ -15,10 +15,12 @@ Steps:
 7. Automate & Tweak
 
 ### Azure setup
-Create resources and store configuration in a cfg table.
-Go to /install/init_resources and edit the config.json file.
+Go to /install/init_resources and edit the config.json file, to setup resources and storage configuration.
 Log in to the Azure account via powershell and let script generate cli commands.
 
 ### DWH Framework
 Create frameworks for SQL jobs and logging system.
 Go to /database/init_framework and run all scripts against the SQL database.
+
+## Development mode
+Check file DEV.txt in /doocumentation folder
