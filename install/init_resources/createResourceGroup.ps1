@@ -11,7 +11,7 @@ if(!$c) {
 }
 
 # Connect-AzAccount
-# Connect-AzAccount
+Connect-AzAccount
 Select-AzSubscription -Subscription "Visual Studio Professional Subscription"
 
 # Variables - set the resource group name, location, servername, database and allowed IP range

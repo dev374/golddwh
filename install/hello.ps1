@@ -6,14 +6,16 @@ $global:main = $(pwd).Path
 cd $main
 
 echo 'Config load'
-<#
-echo 'Creating Azure Resources'
+
+echo '`nCreating Azure Resources'
 & .\init_resources\createResourceGroup.ps1
+<#
 & .\init_resources\createServer.ps1
 & .\init_resources\createDatabase.ps1
-& .\init_resources\createDataFactory.ps1
 #>
-echo 'Creating AzCopy Resource'
+& .\init_resources\createDataFactory.ps1
+
+echo '`nCreating AzCopy Resource'
 & .\init_azcopy\createAzcopy.ps1
 
 sleep 3
