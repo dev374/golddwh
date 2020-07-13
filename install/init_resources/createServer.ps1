@@ -28,4 +28,7 @@ if ($srvarray -like $serverName) {
         -ServerName $serverName `
         -FirewallRuleName "AllowedIPs" -StartIpAddress $startIp -EndIpAddress $endIp
 
+    $serverFirewallRule = New-AzSqlServerFirewallRule -ResourceGroupName $resourceGroupName `
+        -ServerName $serverName `
+		-AllowAllAzureIPs
 }

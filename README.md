@@ -14,6 +14,11 @@ Steps:
 6. ETL setup with generated code 
 7. Automate & Tweak
 
+#### Prerequisites
+PowerShell modeules Az. Remove AzureRM.
+		Uninstall-AzureRm
+		Install-Module -Name Az -AllowClobber -Scope AllUsers
+
 ### Azure setup
 Go to /install/init_resources and edit the config.json file, to setup resources and storage configuration.
 Log in to the Azure account via powershell and let script generate cli commands.

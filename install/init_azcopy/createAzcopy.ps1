@@ -1,5 +1,4 @@
 $azloc = (curl https://aka.ms/downloadazcopy-v10-windows -MaximumRedirection 0 -ErrorAction silentlycontinue).headers.location
-$temploc = "C:\temp"
 $etlloc = $main + "\..\etl"
 $azdest = $temploc + "\azcopy.zip"
 

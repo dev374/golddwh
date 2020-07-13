@@ -1,6 +1,11 @@
 {
+	"general": {
+		"main": "C:\\Dev\\golddwh\\install",
+		"temploc": "C:\\temp",
+		"connectazaccount": "0",
+		"subscriptionname": "Visual Studio Professional Subscription"
+	},
 	"server": {
-		"subscription": "Visual Studio Professional Subscription",
 		"resourcegroupname": "resourcegroupdwh",
 		"location": "West Europe",
 		"servername": "sqlsrvdwh",
@@ -14,13 +19,15 @@
 		"objective": "Basic"
 	},
 	"path": {
-		"logfile": "C:\\tabcmd\\log.txt",
-		"install": "c:\\Dev\\golddwh\\install\\",
-		"adflinkedservices": "c:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\",
-		"adflinkedservicesblobfile": "conn_blobstorage.json"
+		"logfile": "C:\\Dev\\golddwh\\documentation\\logs\\loginstall.txt",
+		"install": "C:\\Dev\\golddwh\\install\\",
+		"adflinkedservices": "C:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\"
 	},
 	"datafactory": {
-		"datafactoryname": "datafactorydwhv2"
+		"datafactoryname": "datafactorydwhv2",
+		"linkedserviceblob": "conn_blobstorage",
+		"linkedservicesql": "conn_sqldwh",
+		"linkedservicejsonext": ".json"
 	},
 	"storage": {
 		"storagename": "stordwhgold",

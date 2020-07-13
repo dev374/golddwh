@@ -1,21 +1,4 @@
-# Initial
-#	Uninstall-AzureRm
-#	Install-Module -Name Az -AllowClobber -Scope AllUsers
 
-# Config load
-$c = Get-Content .\config.json | ConvertFrom-Json
-
-if(!$c) { 
-	echo 'Empty config. Load config first'
-	exit
-}
-
-# Connect-AzAccount
-Connect-AzAccount
-Select-AzSubscription -Subscription "Visual Studio Professional Subscription"
-
-# Variables - set the resource group name, location, servername, database and allowed IP range
-$global:resourceGroupName = $c.server.resourcegroupname
 $global:location = $c.server.location
 $global:serverName = $c.server.servername
 $global:databaseName = $c.server.databaseName

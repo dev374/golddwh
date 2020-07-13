@@ -1,10 +1,25 @@
-Project items for development
+# Project items for development
 01. Correct paths: mainpath, config etc. to be ready to install everywhere
 +02. Setup azcopy. Create installation which copies azcopy to operations folder.
 03. Azcopy should load any file into input folder (landing container), from operations/import folder.
 04. Install up to datafactory. ADF should take .csv file as input (metadata_source, metadata_ref, ..) and put them as a table in the metadata database. Input files should be moved to an archive folder. 
 05. Move out saved keys
+06. Generate jsons for datafactory
+07. Create logging procedure in all databases - and generate it automatically with the install
 
+# DWH Workflow
+Specify source data model and save via excel in the file "data_model_mapping.csv". Save in the "etl/import" folder and hit run_import.bat. Data model mapping is sent to storage and imported in the "metadata" database. In the sotrage it is copied to "archive" container with proper timestamp. In the DB it is imported into "data_model_mapping" (schema adf) table, while previous is logged in the table "data_model_history" (schema log) as an entry and deleted. Import logging occurs via called stored procedure on that database.
+This file contains:
+1. entity name e.g. users
+2. source schema name
+3. source table name
+4. source column name
+5. ordinal position
+6. is_nullable
+7. datatype
+8. char length (default max)
+9. business_key_ind
+10. active_ind
 
-
-
+Data model determines input data. Input data are incoming .csv files.
+Raw data vault model are files
