@@ -1,0 +1,24 @@
+{
+    "name": "<datasetname>",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "<linkedServiceName>",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "<type>",
+        "typeProperties": {
+            "location": {
+                "type": "<locationtype>",
+                "fileName": "<filenameorfolder>",
+                "container": "<containername>"
+            },
+            "columnDelimiter": ";",
+            "escapeChar": "\\",
+            "firstRowAsHeader": <flagfirstRowAsHeader>,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

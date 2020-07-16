@@ -1,6 +1,5 @@
 {
 	"general": {
-		"main": "C:\\Dev\\golddwh\\install",
 		"temploc": "C:\\temp",
 		"connectazaccount": "0",
 		"subscriptionname": "Visual Studio Professional Subscription"
@@ -19,16 +18,16 @@
 		"objective": "Basic"
 	},
 	"path": {
-		"logfile": "C:\\Dev\\golddwh\\documentation\\logs\\loginstall.txt",
-		"install": "C:\\Dev\\golddwh\\install\\",
-		"config": "C:\\Dev\\golddwh\\install\\config\\",
-		"adflinkedservices": "C:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\",
-		"adftemplatesds": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\ds\\",
-		"adftemplatespl": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\pl\\",
-		"adftemplatestr": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\tr\\",
-		"datasets": "C:\\Dev\\golddwh\\install\\init_datafactory\\datasets\\",
-		"pipelines": "C:\\Dev\\golddwh\\install\\init_datafactory\\pipelines\\",
-		"triggers": "C:\\Dev\\golddwh\\install\\init_datafactory\\triggers\\"
+		"logfile": "C:\\Apps\\golddwh\\documentation\\logs\\loginstall.txt",
+		"install": "C:\\Apps\\golddwh\\install\\",
+		"config": "C:\\Apps\\golddwh\\install\\config\\",
+		"adflinkedservices": "C:\\Apps\\golddwh\\install\\init_datafactory\\linked_services\\",
+		"adftemplatesds": "C:\\Apps\\golddwh\\install\\init_datafactory\\templates\\ds\\",
+		"adftemplatespl": "C:\\Apps\\golddwh\\install\\init_datafactory\\templates\\pl\\",
+		"adftemplatestr": "C:\\Apps\\golddwh\\install\\init_datafactory\\templates\\tr\\",
+		"datasets": "C:\\Apps\\golddwh\\install\\init_datafactory\\datasets\\",
+		"pipelines": "C:\\Apps\\golddwh\\install\\init_datafactory\\pipelines\\",
+		"triggers": "C:\\Apps\\golddwh\\install\\init_datafactory\\triggers\\"
 	},
 	"datafactory": {
 		"datafactoryname": "datafactorydwhv2",
@@ -36,6 +35,21 @@
 		"linkedservicesql": "conn_sqldwh",
 		"linkedservicejsonext": ".json"
 	},
+	"datasets": {
+		"ds_config": "config_datasets.csv",
+		"template_blob_folder": "template_blob_folder.txt",
+		"template_blob_file": "template_blob_file.txt",
+		"template_sql": "template_sql.txt"
+	},
+	"pipelines": {
+		"a": "a",
+		"b": "b"
+	},
+	"triggers": {
+		"a": "a",
+		"b": "b"
+	},
+
 	"storage": {
 		"storagename": "stordwhgold",
 		"storagekey": "p1d2Ng1ZtlaIv/nqA9JDy0Za3YB4DBuUUOSncRP85RqPqVoSeHdeu+q7CU7vl6HBW7ZIFqqNNC/xUc0RqcDVhw=="

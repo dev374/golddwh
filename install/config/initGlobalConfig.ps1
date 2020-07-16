@@ -24,7 +24,7 @@ $global:linkedservicejsonext = $c.datafactory.linkedservicejsonext
 $global:storagename = $c.storage.storagename
 $global:loginstallfile = $c.path.loginstallfile
 $global:temploc = $c.general.temploc
-$global:main = $c.general.main
+$global:main = $(pwd).Path
 <# For future use
 $global: = $c.
 #>

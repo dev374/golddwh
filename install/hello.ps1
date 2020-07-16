@@ -4,7 +4,6 @@ Write-Host "`n--> Config load" -ForegroundColor Green
 & .\config\initGlobalConfig.ps1
 
 # Run 'Dummy check' through install - pwd is where install folder (hello) is
-$global:main = $(pwd).Path
 & $($main + "\init_azcopy\dummycheck.ps1")
 cd $main
 

@@ -1,0 +1,4 @@
+typeid;type;linkedServiceName;datasetname;schema;tablename;description;filenameorfolder;locationtype;containername;flagfirstRowAsHeader
+1;DelimitedText;conn_blobstorage;src_data_model_mapping2;;;;data_model_mapping.csv;AzureBlobStorageLocation;metadatablobs;true
+1;DelimitedText;conn_blobstorage;src_meta_data_candidates2;;;;meta_data_candidates.csv;AzureBlobStorageLocation;metadatablobs;true
+2;AzureSqlTable;conn_sqldwh;dst_sql_in3;adf;@dataset().pipelinename;schema adf.pipelinename;;;;

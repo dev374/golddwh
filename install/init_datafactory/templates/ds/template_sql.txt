@@ -1,0 +1,31 @@
+{
+    "name": "<datasetname>",
+    "properties": {
+        "description": "<description>",
+        "linkedServiceName": {
+            "referenceName": "<linkedServiceName>",
+            "type": "LinkedServiceReference"
+        },
+        "parameters": {
+            "pipelinename": {
+                "type": "string",
+                "defaultValue": "@pipeline().Pipeline"
+            },
+            "pipelinerunid": {
+                "type": "string",
+                "defaultValue": "@pipeline().RunId"
+            }
+        },
+        "annotations": [],
+        "type": "<type>",
+        "schema": [],
+        "typeProperties": {
+            "schema": "<schema>",
+            "table": {
+                "value": "<tablename>",
+                "type": "Expression"
+            }
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}
