@@ -1,10 +1,3 @@
-# Config load
-$c = Get-Content .\config.json | ConvertFrom-Json
-
-if(!$c) { 
-	echo 'Empty config. Load config first'
-	exit
-}
 
 # Variables - set the resource group name, location, servername, database and allowed IP range
 $global:datafactoryname = $c.datafactory.datafactoryname

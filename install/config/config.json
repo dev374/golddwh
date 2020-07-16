@@ -21,7 +21,14 @@
 	"path": {
 		"logfile": "C:\\Dev\\golddwh\\documentation\\logs\\loginstall.txt",
 		"install": "C:\\Dev\\golddwh\\install\\",
-		"adflinkedservices": "C:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\"
+		"config": "C:\\Dev\\golddwh\\install\\config\\",
+		"adflinkedservices": "C:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\",
+		"adftemplatesds": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\ds\\",
+		"adftemplatespl": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\pl\\",
+		"adftemplatestr": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\tr\\",
+		"datasets": "C:\\Dev\\golddwh\\install\\init_datafactory\\datasets\\",
+		"pipelines": "C:\\Dev\\golddwh\\install\\init_datafactory\\pipelines\\",
+		"triggers": "C:\\Dev\\golddwh\\install\\init_datafactory\\triggers\\"
 	},
 	"datafactory": {
 		"datafactoryname": "datafactorydwhv2",

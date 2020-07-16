@@ -1,0 +1,24 @@
+{
+    "name": "src_data_model_mapping",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "conn_blobstorage",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "data_model_mapping.csv",
+                "container": "metadatablobs"
+            },
+            "columnDelimiter": ";",
+            "escapeChar": "\\",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

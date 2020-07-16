@@ -1,0 +1,17 @@
+{
+    "name": "dest_sql",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "conn_dev_azuresql",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "AzureSqlTable",
+        "schema": [],
+        "typeProperties": {
+            "schema": "etl",
+            "table": "data_model_mapping"
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

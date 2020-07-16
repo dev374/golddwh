@@ -1,7 +1,6 @@
 # This should run from any location
 # Global config load within a file or separately:returns variable $c to use in every script
-$main = "c:\Dev\golddwh\install"
-$global:c = Get-Content $(Join-Path $main "config.json") | ConvertFrom-Json
+$global:c = Get-Content $(Join-Path $pwd "config\config.json") | ConvertFrom-Json
 
 if(!$c) { 
 	echo 'Empty config. Load config first'

@@ -1,10 +1,5 @@
 
 # Variables - set the resource group name, location, servername, database and allowed IP range
-<#
-$global:resourceGroupName = $c.server.resourcegroupname
-$global:datafactoryname = $c.datafactory.datafactoryname
-$global:storagename = $c.storage.storagename
-#>
 $storagekey = $c.storage.storagekey
 $pathadflinkedservices = $c.path.adflinkedservices
 $linkedserviceblob = $c.datafactory.linkedserviceblob
