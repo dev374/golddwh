@@ -24,33 +24,55 @@ $joinedObject = Foreach ($row in $datasets)
 {
 	$createarray = @();
 
-	if ($row.typeid -eq 2) {
+	# SQL type
+	if ($row.typeid -eq 1) { 
 		$name = "$($row.datasetname)"
 		$dstemplate = $c_sql -replace "<datasetname>", "$($row.datasetname)"
-		$dstemplate = $dstemplate -replace "<description>", "$($row.description)"
 		$dstemplate = $dstemplate -replace "<linkedServiceName>", "$($row.linkedServiceName)"
 		$dstemplate = $dstemplate -replace "<type>", "$($row.type)"
 		$dstemplate = $dstemplate -replace "<schema>", "$($row.schema)"
 		$dstemplate = $dstemplate -replace "<tablename>", "$($row.tablename)"
-		
-		$json = $(Join-Path $path_datasets "$($row.datasetname).json")
-		$createarray += $json
-		$dstemplate > $json
-		
-		# Create 
-		if($dsarray -eq $name) {
-			Write-Host "The dataset: $name already exists"
-		} else {
-			Write-Host "OK new dataset is $name" 
+		$dstemplate = $dstemplate -replace "<description>", "$($row.description)"
 			
-			$newDataset = New-AzDataFactoryV2Dataset -ResourceGroupName $resourcegroupname `
-			-DataFactoryName $datafactoryname -Name $name `
-			-File $json
-		} 
-		
-	}
+	# Blob file or Blob folder type or exit
+	} else {
+
+		if ($row.typeid -eq 2) { $dstemplate = $c_blob_file -replace "<datasetname>", "$($row.datasetname)" }
+		elseif ($row.typeid -eq 3) { $dstemplate = $c_blob_fold -replace "<datasetname>", "$($row.datasetname)" }
+		else {
+			Write-Host "The dataset: typeid error. Exit"
+			exit
+		}
+		$name = "$($row.datasetname)"
+		$dstemplate = $dstemplate -replace "<linkedServiceName>", "$($row.linkedServiceName)"
+		$dstemplate = $dstemplate -replace "<type>", "$($row.type)"
+		$dstemplate = $dstemplate -replace "<filenameorfolder>", "$($row.filenameorfolder)"
+		$dstemplate = $dstemplate -replace "<foldertype>", "$($row.foldertype)"		
+		$dstemplate = $dstemplate -replace "<locationtype>", "$($row.locationtype)"
+		$dstemplate = $dstemplate -replace "<containername>", "$($row.containername)"
+		$dstemplate = $dstemplate -replace "<flagfirstRowAsHeader>", "$($row.flagfirstRowAsHeader)"
+
+	}  
 	
+	# For all types
+	$json = $(Join-Path $path_datasets "$name.json")
+	$createarray += $json
+	$dstemplate > $json
 		
+	
+	# Create 
+	if($dsarray -eq $name) {
+		Write-Host "The dataset: $name already exists"
+	} else {
+		Write-Host "OK new dataset is $name" 
+		Write-Host $dstemplate
+
+		$newDataset = New-AzDataFactoryV2Dataset -ResourceGroupName $resourcegroupname `
+		-DataFactoryName $datafactoryname -Name $name `
+		-File $json
+	} 
+	
+	
 }
 
 

@@ -1,0 +1,59 @@
+            {
+                "name": "Log loading finish error",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "dat_categories",
+                        "dependencyConditions": [
+                            "Failed"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[whs_log_load]",
+                    "storedProcedureParameters": {
+                        "pipeline_name": {
+                            "value": {
+                                "value": "@{pipeline().Pipeline}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "run_id": {
+                            "value": {
+                                "value": "@pipeline().RunId",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "start_dttm": {
+                            "value": {
+                                "value": "@{utcnow()}",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "action": {
+                            "value": {
+                                "value": "@activity('dat_categories').error",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        },
+                        "file_name": {
+                            "value": {
+                                "value": "@pipeline().parameters.name",
+                                "type": "Expression"
+                            },
+                            "type": "String"
+                        }
+                    }
+                }

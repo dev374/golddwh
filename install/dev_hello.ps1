@@ -1,5 +1,7 @@
 cls
 
+cd "c:\Dev\golddwh\install\"
+
 Write-Host "`n--> Config load" -ForegroundColor Green
 & .\config\initGlobalConfig.ps1
 

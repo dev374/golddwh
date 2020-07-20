@@ -1,0 +1,71 @@
+            {
+                "name": "Copy data SQL",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "Log loading start",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [
+                    {
+                        "name": "Source",
+                        "value": "<sourceblobfoldername>"
+                    },
+                    {
+                        "name": "Destination",
+                        "value": "adf.@{pipeline().Pipeline}"
+                    },
+                    {
+                        "name": "PipelineTime",
+                        "value": "@pipeline().TriggerTime"
+                    }
+                ],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "wildcardFileName": {
+                                "value": "*@{pipeline().parameters.name}*.csv",
+                                "type": "Expression"
+                            },
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "AzureSqlSink",
+                        "tableOption": "autoCreate"
+                    },
+                    "enableStaging": false
+                },
+                "inputs": [
+                    {
+                        "referenceName": "src_blob_in",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "dst_sql_in",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "pipelinename": "@pipeline().Pipeline",
+                            "pipelinerunid": "@pipeline().RunId"
+                        }
+                    }
+                ]
+            }

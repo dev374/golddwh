@@ -1,4 +1,5 @@
-typeid;type;linkedServiceName;datasetname;schema;tablename;description;filenameorfolder;locationtype;containername;flagfirstRowAsHeader
-1;DelimitedText;conn_blobstorage;src_data_model_mapping2;;;;data_model_mapping.csv;AzureBlobStorageLocation;metadatablobs;true
-1;DelimitedText;conn_blobstorage;src_meta_data_candidates2;;;;meta_data_candidates.csv;AzureBlobStorageLocation;metadatablobs;true
-2;AzureSqlTable;conn_sqldwh;dst_sql_in3;adf;@dataset().pipelinename;schema adf.pipelinename;;;;
+typeid;type;linkedServiceName;datasetname;schema;tablename;description;filenameorfolder;foldertype;locationtype;containername;flagfirstRowAsHeader
+1;AzureSqlTable;conn_sqldwh;dst_sql_in3;adf;@dataset().pipelinename;schema adf.pipelinename;;;;
+2;DelimitedText;conn_blobstorage;src_data_model_mapping2;;;;data_model_mapping.csv;String;AzureBlobStorageLocation;metadatablobs;true
+2;DelimitedText;conn_blobstorage;src_meta_data_candidates2;;;;meta_data_candidates.csv;String;AzureBlobStorageLocation;metadatablobs;true
+3;DelimitedText;conn_blobstorage;dst_archive_all;;;;@concat(formatDateTime(utcnow(),'yyyy'),'/',formatDateTime(utcnow(),'MM'),'/',formatDateTime(utcnow(),'dd'),'/',pipeline().Pipeline,'/',formatDateTime(utcnow(),'HH_mm_ss'));Expression;AzureBlobStorageLocation;archive;true

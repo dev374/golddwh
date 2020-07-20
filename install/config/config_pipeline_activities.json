@@ -1,0 +1,14 @@
+{
+	"copymetadata": {
+		"sourceblobfoldername": "metadatablob"
+	},
+	"copydata": {
+		"sourceblobfoldername": "sourceblobfoldername"
+	},
+	"logging": {
+		"loggingstoredprocedurename": "[dbo].[whs_log_load]",
+		"statusstart": "STARTED",
+		"statusfinish": "FINISHED",
+		"statuserror": "ERROR"
+	}
+}

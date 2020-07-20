@@ -1,0 +1,2 @@
+type;pipelinename;linkedServiceName
+copy_data_blob_sql;dat_categories;conn_sqldwh

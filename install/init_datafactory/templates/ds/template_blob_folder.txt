@@ -10,7 +10,10 @@
         "typeProperties": {
             "location": {
                 "type": "<locationtype>",
-                "folderPath": "<filenameorfolder>",
+                "folderPath": {
+                    "value": "<filenameorfolder>",
+                    "type": "<foldertype>"
+                },
                 "container": "<containername>"
             },
             "columnDelimiter": ";",

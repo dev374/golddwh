@@ -1,0 +1,17 @@
+        ],
+        "parameters": {
+            "pipelinename": {
+                "type": "string",
+                "defaultValue": "<pipelinename>"
+            }
+        },
+        "variables": {
+            "objectname": {
+                "type": "String",
+                "defaultValue": "<pipelinename>"
+            }
+        },
+        "annotations": []
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

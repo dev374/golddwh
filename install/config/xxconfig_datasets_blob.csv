@@ -1,3 +1,0 @@
-datasetname;filename;linkedServiceName;type;location;containername;flagfirstRowAsHeader
-src_data_model_mapping;data_model_mapping.csv;conn_blobstorage;AzureBlobStorageLocation;DelimitedText;metadatablobs;true
-src_meta_data_candidates;meta_data_candidates.csv;conn_blobstorage;AzureBlobStorageLocation;DelimitedText;metadatablobs;true
