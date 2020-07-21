@@ -1,1 +1,8 @@
-a
+- config files:
+	- global config				: config.json
+	- list of datasets			: config_datasets
+	- list of pipelines 		: config_pipelines
+	- config of pl activities	: config_pipelines_activity
+- global config runs each time via initGlobalConfig file	
+- after pipelines installation, allow datafactory to access SQL server
+- etl logging is dine via SQL SP: whs_load_log which is defined in config_pipelines_activity.json file

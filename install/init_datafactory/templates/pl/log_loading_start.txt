@@ -1,14 +1,7 @@
             {
-                "name": "Log loading finish error",
+                "name": "Log loading start",
                 "type": "SqlServerStoredProcedure",
-                "dependsOn": [
-                    {
-                        "activity": "dat_categories",
-                        "dependencyConditions": [
-                            "Failed"
-                        ]
-                    }
-                ],
+                "dependsOn": [],
                 "policy": {
                     "timeout": "7.00:00:00",
                     "retry": 0,
@@ -18,7 +11,7 @@
                 },
                 "userProperties": [],
                 "typeProperties": {
-                    "storedProcedureName": "[dbo].[whs_log_load]",
+                    "storedProcedureName": "<logstoredprocedurename>",
                     "storedProcedureParameters": {
                         "pipeline_name": {
                             "value": {
@@ -42,18 +35,20 @@
                             "type": "String"
                         },
                         "action": {
-                            "value": {
-                                "value": "@activity('dat_categories').error",
-                                "type": "Expression"
-                            },
+                            "value": "<statusstart>",
                             "type": "String"
                         },
                         "file_name": {
                             "value": {
-                                "value": "@pipeline().parameters.name",
+                                "value": "<pipelinename>",
                                 "type": "Expression"
                             },
                             "type": "String"
                         }
                     }
+                },
+                "linkedServiceName": {
+                    "referenceName": "<loglinkedservicesql>",
+                    "type": "LinkedServiceReference"
                 }
+            }

@@ -58,14 +58,14 @@ $joinedObject = Foreach ($row in $datasets)
 	$json = $(Join-Path $path_datasets "$name.json")
 	$createarray += $json
 	$dstemplate > $json
+	Write-Host "START dataset $name" 
 		
 	
 	# Create 
 	if($dsarray -eq $name) {
-		Write-Host "The dataset: $name already exists"
+		Write-Host "SKIP dataset: $name already exists"
 	} else {
-		Write-Host "OK new dataset is $name" 
-		Write-Host $dstemplate
+		Write-Host "OK new dataset created: $name" 
 
 		$newDataset = New-AzDataFactoryV2Dataset -ResourceGroupName $resourcegroupname `
 		-DataFactoryName $datafactoryname -Name $name `
@@ -74,24 +74,4 @@ $joinedObject = Foreach ($row in $datasets)
 	
 	
 }
-
-
-<# v1. working ok
-# Templated datasets create
-$createarray = @('dst_sql_in','src_blob_in')
-ForEach ($c in $createarray) {
-	if($dsarray -like $c) {
-		echo "The linked service: $c already exists"
-	} else {
-		echo "OK new dataset is $c" 
-		$f = $(Join-Path $path_templates $c) + ".json"
-		
-		# Create 
-		$newDataset = New-AzDataFactoryV2Dataset -ResourceGroupName $resourcegroupname `
-        -DataFactoryName $datafactoryname -Name $c `
-        -File $f
-	} 
-}
-#>
-
 

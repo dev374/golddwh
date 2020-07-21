@@ -1,9 +1,9 @@
             {
-                "name": "Archive source file",
+                "name": "Copy data SQL",
                 "type": "Copy",
                 "dependsOn": [
                     {
-                        "activity": "Copy data SQL",
+                        "activity": "Log loading start",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -19,11 +19,11 @@
                 "userProperties": [
                     {
                         "name": "Source",
-                        "value": "metadatablobs//data_model_mapping.csv"
+                        "value": "<sourceblobfoldername>"
                     },
                     {
                         "name": "Destination",
-                        "value": "metadatablobs/@{utcnow()}/data_model_mapping.csv"
+                        "value": "adf.@{pipeline().Pipeline}"
                     },
                     {
                         "name": "PipelineTime",
@@ -35,36 +35,37 @@
                         "type": "DelimitedTextSource",
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
-                            "recursive": true
+                            "recursive": true,
+                            "wildcardFileName": {
+                                "value": "<pipelinename>*.csv",
+                                "type": "Expression"
+                            },
+                            "enablePartitionDiscovery": false
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
                         }
                     },
                     "sink": {
-                        "type": "DelimitedTextSink",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageWriteSettings"
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextWriteSettings",
-                            "quoteAllText": true,
-                            "fileExtension": ""
-                        }
+                        "type": "AzureSqlSink",
+                        "tableOption": "autoCreate"
                     },
                     "enableStaging": false
                 },
                 "inputs": [
                     {
-                        "referenceName": "src_data_model_mapping",
+                        "referenceName": "<copydatainputs>",
                         "type": "DatasetReference"
                     }
                 ],
                 "outputs": [
                     {
-                        "referenceName": "dest_archive_all",
-                        "type": "DatasetReference"
+                        "referenceName": "<copydataoutputs>",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "pipelinename": "@pipeline().Pipeline",
+                            "pipelinerunid": "@pipeline().RunId"
+                        }
                     }
                 ]
             }
-a

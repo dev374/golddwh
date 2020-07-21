@@ -30,7 +30,7 @@
 		"triggers": "C:\\Dev\\golddwh\\install\\init_datafactory\\triggers\\"
 	},
 	"datafactory": {
-		"datafactoryname": "datafactorydwhv2",
+		"datafactoryname": "dfdwh9837234",
 		"linkedserviceblob": "conn_blobstorage",
 		"linkedservicesql": "conn_sqldwh",
 		"linkedservicejsonext": ".json"
@@ -42,8 +42,15 @@
 		"template_sql": "template_sql.txt"
 	},
 	"pipelines": {
-		"a": "a",
-		"b": "b"
+		"pl_config": "config_pipelines.csv",
+		"pl_act_config": "config_pipeline_activities.json",
+		"template_act_archive": "archive_source_file.txt",
+		"template_act_copydata": "copy_data_blob_sql.txt",
+		"template_act_log_start": "log_loading_start.txt",
+		"template_act_log_finish": "log_loading_finish.txt",
+		"template_act_log_error": "log_loading_error.txt",
+		"template_start": "pl_begin.txt",
+		"template_ending": "pl_ending.txt"
 	},
 	"triggers": {
 		"a": "a",

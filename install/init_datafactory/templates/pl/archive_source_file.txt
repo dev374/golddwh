@@ -1,9 +1,9 @@
             {
-                "name": "Copy data SQL",
+                "name": "Archive source file",
                 "type": "Copy",
                 "dependsOn": [
                     {
-                        "activity": "Log loading start",
+                        "activity": "Copy data SQL",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -19,11 +19,11 @@
                 "userProperties": [
                     {
                         "name": "Source",
-                        "value": "<sourceblobfoldername>"
+                        "value": "<sourcemetadatablob>//<filename>"
                     },
                     {
                         "name": "Destination",
-                        "value": "adf.@{pipeline().Pipeline}"
+                        "value": "<targetarchiveblob>/@{utcnow()}/<filename>"
                     },
                     {
                         "name": "PipelineTime",
@@ -35,37 +35,35 @@
                         "type": "DelimitedTextSource",
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
-                            "recursive": true,
-                            "wildcardFileName": {
-                                "value": "*@{pipeline().parameters.name}*.csv",
-                                "type": "Expression"
-                            },
-                            "enablePartitionDiscovery": false
+                            "recursive": true
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
                         }
                     },
                     "sink": {
-                        "type": "AzureSqlSink",
-                        "tableOption": "autoCreate"
+                        "type": "DelimitedTextSink",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextWriteSettings",
+                            "quoteAllText": true,
+                            "fileExtension": ""
+                        }
                     },
                     "enableStaging": false
                 },
                 "inputs": [
                     {
-                        "referenceName": "src_blob_in",
+                        "referenceName": "<archiveinputs>",
                         "type": "DatasetReference"
                     }
                 ],
                 "outputs": [
                     {
-                        "referenceName": "dst_sql_in",
-                        "type": "DatasetReference",
-                        "parameters": {
-                            "pipelinename": "@pipeline().Pipeline",
-                            "pipelinerunid": "@pipeline().RunId"
-                        }
+                        "referenceName": "<archiveoutputs>",
+                        "type": "DatasetReference"
                     }
                 ]
             }

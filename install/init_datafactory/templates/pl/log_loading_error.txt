@@ -1,11 +1,11 @@
             {
-                "name": "Log loading finish",
+                "name": "Log loading finish error",
                 "type": "SqlServerStoredProcedure",
                 "dependsOn": [
                     {
-                        "activity": "Copy data SQL",
+                        "activity": "<logloadinderrordpendendon>",
                         "dependencyConditions": [
-                            "Succeeded"
+                            "Failed"
                         ]
                     }
                 ],
@@ -43,22 +43,17 @@
                         },
                         "action": {
                             "value": {
-                                "value": "<statusfinish>",
+                                "value": "@{activity('<logloadinderrordpendendon>').error}",
                                 "type": "Expression"
                             },
                             "type": "String"
                         },
                         "file_name": {
                             "value": {
-                                "value": "@pipeline().parameters.name",
+                                "value": "<pipelinename>",
                                 "type": "Expression"
                             },
                             "type": "String"
                         }
                     }
-                },
-                "linkedServiceName": {
-                    "referenceName": "<linkedservicesql>",
-                    "type": "LinkedServiceReference"
                 }
-            }

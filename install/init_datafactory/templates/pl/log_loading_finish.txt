@@ -1,7 +1,14 @@
             {
-                "name": "Log loading start",
+                "name": "Log loading finish",
                 "type": "SqlServerStoredProcedure",
-                "dependsOn": [],
+                "dependsOn": [
+                    {
+                        "activity": "Copy data SQL",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
                 "policy": {
                     "timeout": "7.00:00:00",
                     "retry": 0,
@@ -11,7 +18,7 @@
                 },
                 "userProperties": [],
                 "typeProperties": {
-                    "storedProcedureName": "<loggingstoredprocedurename>",
+                    "storedProcedureName": "<logstoredprocedurename>",
                     "storedProcedureParameters": {
                         "pipeline_name": {
                             "value": {
@@ -35,12 +42,15 @@
                             "type": "String"
                         },
                         "action": {
-                            "value": "<statusstart>",
+                            "value": {
+                                "value": "<statusfinish>",
+                                "type": "Expression"
+                            },
                             "type": "String"
                         },
                         "file_name": {
                             "value": {
-                                "value": "@pipeline().parameters.name",
+                                "value": "<pipelinename>",
                                 "type": "Expression"
                             },
                             "type": "String"
@@ -48,7 +58,7 @@
                     }
                 },
                 "linkedServiceName": {
-                    "referenceName": "<linkedservicesql>",
+                    "referenceName": "<loglinkedservicesql>",
                     "type": "LinkedServiceReference"
                 }
             }

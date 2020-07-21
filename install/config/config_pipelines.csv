@@ -1,2 +1,2 @@
-type;pipelinename;linkedServiceName
-copy_data_blob_sql;dat_categories;conn_sqldwh
+typeid;pipelinetype;pipelinename;filename;inputs;outputs
+1;load_csv_data;dat_categories;dat_categories.csv;src_blob_in;dst_sql_in
