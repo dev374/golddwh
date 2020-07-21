@@ -36,9 +36,9 @@ ForEach ($p in $getpl.Name) {
 $joinedObject = Foreach ($row in $pipelines) 
 {
 	if ($row.typeid -eq 1) { 
-		$name = "$($row.pipelinename)"     #   , $p_archive , $p_logerror 
+		$name = "$($row.pipelinename)"     #   , $p_logerror 
 		
-		$pl_template = "$pl_start $p_logstart , $p_copydata , $p_logfinish $pl_ending"	
+		$pl_template = "$pl_start $p_logstart , $p_copydata , $p_archive , $p_logfinish $pl_ending"	
 			
 		# Prepare tamplate in templates		
 		$pl_template = $pl_template -replace "<filename>", "$($row.filename)"

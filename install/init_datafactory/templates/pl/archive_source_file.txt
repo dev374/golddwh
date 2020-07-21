@@ -19,7 +19,7 @@
                 "userProperties": [
                     {
                         "name": "Source",
-                        "value": "<sourcemetadatablob>//<filename>"
+                        "value": "<sourceloaddatablob>//<filename>"
                     },
                     {
                         "name": "Destination",
@@ -35,7 +35,9 @@
                         "type": "DelimitedTextSource",
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
-                            "recursive": true
+                            "recursive": true,
+                            "wildcardFileName": "<filename>",
+                            "enablePartitionDiscovery": false
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
