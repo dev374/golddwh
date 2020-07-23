@@ -52,6 +52,8 @@ $joinedObject = Foreach ($row in $datasets)
 		$dstemplate = $dstemplate -replace "<containername>", "$($row.containername)"
 		$dstemplate = $dstemplate -replace "<flagfirstRowAsHeader>", "$($row.flagfirstRowAsHeader)"
 
+		$f = "$($row.containername)\$($row.filenameorfolder)\"
+		$f = $f -replace "\\", "\"
 	}  
 	
 	# For all types
