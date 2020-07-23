@@ -29,10 +29,12 @@ $global:main = $(pwd).Path
 $global: = $c.
 #>
 
-
 # Connect-AzAccount
 if($connectazaccount -eq 1) {
 	Connect-AzAccount
 	Select-AzSubscription -Subscription $subscriptionname #"Visual Studio Professional Subscription"
 }
 
+$s = Get-AzSubscription
+$global:subscriptionid = $s.Id
+$global:tenantid = $s.TenantId

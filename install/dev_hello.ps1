@@ -28,8 +28,8 @@ Write-Host "`n--> Creating (DEV)" -ForegroundColor Green
 
 & .\init_datafactory\createDatasets.ps1
 
-#>
-& .\init_datafactory\createPipelines.ps1
 
+& .\init_datafactory\createPipelines.ps1
+#>
 
 sleep 1

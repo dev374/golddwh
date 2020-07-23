@@ -1,0 +1,25 @@
+{
+    "name": "<name>",
+    "properties": {
+        "annotations": [],
+        "runtimeState": "Started",
+        "pipelines": [
+            {
+                "pipelineReference": {
+                    "referenceName": "<pipelinename>",
+                    "type": "PipelineReference"
+                }
+            }
+        ],
+        "type": "BlobEventsTrigger",
+        "typeProperties": {
+            "blobPathBeginsWith": "<blobPathBeginsWith>",
+            "blobPathEndsWith": "csv",
+            "ignoreEmptyBlobs": true,
+            "scope": "/subscriptions/<tenantid>/resourceGroups/<resourcegroup>/providers/Microsoft.Storage/storageAccounts/<storagename>",
+            "events": [
+                "Microsoft.Storage.BlobCreated"
+            ]
+        }
+    }
+}

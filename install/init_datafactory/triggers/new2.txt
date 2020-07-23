@@ -1,0 +1,4 @@
+            "blobPathBeginsWith": "<blobPathBeginsWith>", #/metadatablobs/blobs/data_model_mapping
+
+            "scope": "/subscriptions/a2ed559f-e0af-4c0e-a8f0-511614d2e854/resourceGroups/dwhsqlRG/providers/Microsoft.Storage/storageAccounts/stordwhgold",
+
