@@ -13,7 +13,7 @@ $global:c_blob_file = Get-Content -Path $(Join-Path $path_templates $ds_blob_fil
 $global:c_sql  		= Get-Content -Path $(Join-Path $path_templates $ds_sql) 
 
 # Get existing datasets
-$getds = Get-AzDataFactoryV2Dataset -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
+$global:getds = Get-AzDataFactoryV2Dataset -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
 $dsarray = @()
 ForEach ($d in $getds.Name) {
 	$dsarray += $d

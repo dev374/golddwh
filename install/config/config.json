@@ -18,16 +18,16 @@
 		"objective": "Basic"
 	},
 	"path": {
-		"logfile": "C:\\Apps\\golddwh\\documentation\\logs\\loginstall_",
-		"install": "C:\\Apps\\golddwh\\install\\",
-		"config": "C:\\Apps\\golddwh\\install\\config\\",
-		"adflinkedservices": "C:\\Apps\\golddwh\\install\\init_datafactory\\linked_services\\",
-		"adftemplatesds": "C:\\Apps\\golddwh\\install\\init_datafactory\\templates\\ds\\",
-		"adftemplatespl": "C:\\Apps\\golddwh\\install\\init_datafactory\\templates\\pl\\",
-		"adftemplatestr": "C:\\Apps\\golddwh\\install\\init_datafactory\\templates\\tr\\",
-		"datasets": "C:\\Apps\\golddwh\\install\\init_datafactory\\datasets\\",
-		"pipelines": "C:\\Apps\\golddwh\\install\\init_datafactory\\pipelines\\",
-		"triggers": "C:\\Apps\\golddwh\\install\\init_datafactory\\triggers\\"
+		"logfile": "C:\\Dev\\golddwh\\documentation\\logs\\loginstall_",
+		"install": "C:\\Dev\\golddwh\\install\\",
+		"config": "C:\\Dev\\golddwh\\install\\config\\",
+		"adflinkedservices": "C:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\",
+		"adftemplatesds": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\ds\\",
+		"adftemplatespl": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\pl\\",
+		"adftemplatestr": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\tr\\",
+		"datasets": "C:\\Dev\\golddwh\\install\\init_datafactory\\datasets\\",
+		"pipelines": "C:\\Dev\\golddwh\\install\\init_datafactory\\pipelines\\",
+		"triggers": "C:\\Dev\\golddwh\\install\\init_datafactory\\triggers\\"
 	},
 	"datafactory": {
 		"datafactoryname": "dfdwh9837234",
@@ -53,7 +53,7 @@
 		"template_ending": "pl_ending.txt"
 	},
 	"triggers": {
-		"template_trg_datafile": "trg_datafile.txt",
+		"template_trg_datafile": "trg_data_file.txt",
 		"b": "b"
 	},
 

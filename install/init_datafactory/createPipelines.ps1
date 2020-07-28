@@ -11,7 +11,9 @@ $pl_tem_ending		= $c.pipelines.template_ending
 $tr_tem_datafile	= $c.triggers.template_trg_datafile
 
 $path_pipelines 	= $c.path.pipelines
+$path_triggers 		= $c.path.triggers
 $path_templates 	= $c.path.adftemplatespl
+$path_templates_tr  = $c.path.adftemplatestr
 $path_config 		= $c.path.config
 
 $global:activities  = Get-Content $(Join-Path $path_config $pl_act_config) | ConvertFrom-Json
@@ -23,12 +25,12 @@ $p_logfinish 		= Get-Content -Path $(Join-Path $path_templates $pl_act_log_finis
 $p_logerror 		= Get-Content -Path $(Join-Path $path_templates $pl_act_log_error) 
 $p_start			= Get-Content -Path $(Join-Path $path_templates $pl_tem_start) 
 $p_ending			= Get-Content -Path $(Join-Path $path_templates $pl_tem_ending) 
-$t_datafile  		= Get-Content -Path $(Join-Path $path_templates $tr_tem_datafile) 
+$t_datafile  		= Get-Content -Path $(Join-Path $path_templates_tr $tr_tem_datafile) 
 
 
 # Get existing pipelines and triggers
-$getpl = Get-AzDataFactoryV2Pipeline -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
-$gettr = Get-AzDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
+$global:getpl = Get-AzDataFactoryV2Pipeline -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
+$global:gettr = Get-AzDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
 $plarray = @()
 $trarray = @()
 ForEach ($p in $getpl.Name) {
@@ -42,8 +44,8 @@ ForEach ($p in $gettr.Name) {
 # Create templates for each
 $joinedObject = Foreach ($row in $pipelines) 
 {
+	$name = "$($row.pipelinename)"     #   , $p_logerror 
 	if ($row.typeid -eq 1) { 
-		$name = "$($row.pipelinename)"     #   , $p_logerror 
 		
 		$pl_template = "$p_start $p_logstart , $p_copydata , $p_archive , $p_logfinish $p_ending"	
 			
@@ -66,28 +68,55 @@ $joinedObject = Foreach ($row in $pipelines)
 	}	
 
 	# For all types
-	$json = $(Join-Path $path_pipelines "$name.json")
-	$pl_template = $pl_template -replace "                 ", "`n"
-	$pl_template > $json
-	Write-Host "START pipelinename $name" 
+		$json = $(Join-Path $path_pipelines "$name.json")
+		$pl_template = $pl_template -replace "                 ", "`n"
+		$pl_template > $json
+		Write-Host "START pipeline: $name" 
 
-	
-	# Create pieline
-	if($plarray -eq $name) {
-		Write-Host "SKIP pipeline: $name already exists"
-	} else {
-		Write-Host "OK new pipeline created: $name" 
+		
+		# Create pieline
+		if($plarray -eq $name) {
+			Write-Host "SKIP pipeline: $name already exists"
+		} else {
+			Write-Host "OK new pipeline created: $name" 
 
-		$newDataset = New-AzDataFactoryV2Pipeline -ResourceGroupName $resourcegroupname `
-		-DataFactoryName $datafactoryname -Name $name `
-		-File $json
-	} 
+			$newPipeline = New-AzDataFactoryV2Pipeline -ResourceGroupName $resourcegroupname `
+			-DataFactoryName $datafactoryname -Name $name `
+			-File $json
+		} 
+		
 	
-	
-	# Create corresponding triggers
-	$tr_template = "$t_datafile"
- 	$tr_template = $tr_template -replace "<pipelinename>", "$name"
-	
+	# Create corresponding triggers	
+		$trg_dataset = $datasets | Where-Object {$_.DatasetName -eq "$($row.inputs)"}
+		$trg_blobpath = "/$($trg_dataset.containername)/blobs/$name"
+		$trg_name = "trg_$name"
+		$json = $(Join-Path $path_triggers "$trg_name.json")
+		
+		Write-Host "START trigger: $trg_name" 
+		$tr_template = "$t_datafile"
+		$tr_template = $tr_template -replace "                 ", "`n"
+		$tr_template = $tr_template -replace "          ", "`n"
+		$tr_template = $tr_template -replace "<name>", "$trg_name"
+		$tr_template = $tr_template -replace "<pipelinename>", "$name"
+		$tr_template = $tr_template -replace "<blobPathBeginsWith>", "$trg_blobpath"
+		$tr_template = $tr_template -replace "<tenantid>", "$subscriptionid"
+		$tr_template = $tr_template -replace "<resourcegroup>", "$resourcegroupname"
+		$tr_template = $tr_template -replace "<storagename>", "$storagename"
+		$tr_template > $json
+
+		Write-Host $tr_template # "/$($trg_dataset.containername)/$($trg_dataset.filenameorfolder)/$($row.filename)"
+		
+		if($trarray -eq $name) {
+			Write-Host "SKIP pipeline: $name already exists"
+		} else {
+			Write-Host "OK new pipeline created: $name" 
+
+			$newTrigger = New-AzDataFactoryV2Trigger -ResourceGroupName $resourcegroupname `
+			-DataFactoryName $datafactoryname -Name $trg_name `
+			-File $json
+		} 
+		
+
 }
 
 
