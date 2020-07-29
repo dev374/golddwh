@@ -4,6 +4,12 @@
 		"connectazaccount": "0",
 		"subscriptionname": "Visual Studio Professional Subscription"
 	},
+
+	"storage": {
+		"storagename": "stordwh",
+		"storagekeynr": "key1",
+		"containers": "loaddata archive metadata"
+	},
 	"server": {
 		"resourcegroupname": "resourcegroupdwh",
 		"location": "West Europe",
@@ -55,10 +61,5 @@
 	"triggers": {
 		"template_trg_datafile": "trg_data_file.txt",
 		"b": "b"
-	},
-
-	"storage": {
-		"storagename": "stordwhgold",
-		"storagekey": "p1d2Ng1ZtlaIv/nqA9JDy0Za3YB4DBuUUOSncRP85RqPqVoSeHdeu+q7CU7vl6HBW7ZIFqqNNC/xUc0RqcDVhw=="
 	}
 }

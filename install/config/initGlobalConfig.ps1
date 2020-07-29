@@ -22,6 +22,7 @@ $global:linkedserviceblob = $c.datafactory.linkedserviceblob
 $global:linkedservicesql = $c.datafactory.linkedservicesql
 $global:linkedservicejsonext = $c.datafactory.linkedservicejsonext
 $global:storagename = $c.storage.storagename
+$global:containers = $c.storage.containers
 $global:loginstallfile = $c.path.loginstallfile
 $global:temploc = $c.general.temploc
 $global:main = $(pwd).Path

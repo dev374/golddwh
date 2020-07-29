@@ -1,3 +1,7 @@
+# Create AzCopy
+
+Write-Host "`n--> Creating (DEV) AzCopy" -ForegroundColor Green
+
 $azloc = (curl https://aka.ms/downloadazcopy-v10-windows -MaximumRedirection 0 -ErrorAction silentlycontinue).headers.location
 $etlloc = $main + "\..\etl"
 $azdest = $temploc + "\azcopy.zip"

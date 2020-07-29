@@ -3,5 +3,5 @@ typeid;type;linkedServiceName;datasetname;schema;tablename;description;filenameo
 1;AzureSqlTable;conn_sqldwh;dst_sql_in;adf;@dataset().pipelinename;schema adf.pipelinename;;;;
 2;DelimitedText;conn_blobstorage;src_data_model_mapping;;;;data_model_mapping.csv;String;AzureBlobStorageLocation;metadata;true
 2;DelimitedText;conn_blobstorage;src_meta_data_candidates;;;;meta_data_candidates.csv;String;AzureBlobStorageLocation;metadata;true
-3;DelimitedText;conn_blobstorage;src_blob_in;;;;in;String;AzureBlobStorageLocation;blobdata;true
+3;DelimitedText;conn_blobstorage;src_blob_in;;;;in;String;AzureBlobStorageLocation;loaddata;true
 3;DelimitedText;conn_blobstorage;src_meta_in;;;;in;String;AzureBlobStorageLocation;metadata;true

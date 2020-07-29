@@ -1,3 +1,5 @@
+Write-Host "`n--> Creating (DEV) Pipelines & Triggers" -ForegroundColor Green
+
 # Static pipelines 
 $pl_config 			= $c.pipelines.pl_config
 $pl_act_config 		= $c.pipelines.pl_act_config
@@ -26,7 +28,6 @@ $p_logerror 		= Get-Content -Path $(Join-Path $path_templates $pl_act_log_error)
 $p_start			= Get-Content -Path $(Join-Path $path_templates $pl_tem_start) 
 $p_ending			= Get-Content -Path $(Join-Path $path_templates $pl_tem_ending) 
 $t_datafile  		= Get-Content -Path $(Join-Path $path_templates_tr $tr_tem_datafile) 
-
 
 # Get existing pipelines and triggers
 $global:getpl = Get-AzDataFactoryV2Pipeline -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
