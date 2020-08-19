@@ -11,6 +11,7 @@ $pl_act_log_error	= $c.pipelines.template_act_log_error
 $pl_tem_start		= $c.pipelines.template_start
 $pl_tem_ending		= $c.pipelines.template_ending
 $tr_tem_datafile	= $c.triggers.template_trg_datafile
+$ds_config 			= $c.datasets.ds_config
 
 $path_pipelines 	= $c.path.pipelines
 $path_triggers 		= $c.path.triggers
@@ -20,6 +21,7 @@ $path_config 		= $c.path.config
 
 $global:activities  = Get-Content $(Join-Path $path_config $pl_act_config) | ConvertFrom-Json
 $global:pipelines 	= Get-Content -Path $(Join-Path $path_config $pl_config) | ConvertFrom-Csv -Delimiter ';'
+$global:datasets 	= Get-Content -Path $(Join-Path $path_config $ds_config) | ConvertFrom-Csv -Delimiter ';'
 $p_archive 			= Get-Content -Path $(Join-Path $path_templates $pl_act_archive) 
 $p_copydata			= Get-Content -Path $(Join-Path $path_templates $pl_act_copydata) 
 $p_logstart 		= Get-Content -Path $(Join-Path $path_templates $pl_act_log_start) 
@@ -108,13 +110,18 @@ $joinedObject = Foreach ($row in $pipelines)
 		Write-Host $tr_template # "/$($trg_dataset.containername)/$($trg_dataset.filenameorfolder)/$($row.filename)"
 		
 		if($trarray -eq $name) {
-			Write-Host "SKIP pipeline: $name already exists"
+			Write-Host "SKIP trigger: $name already exists"
 		} else {
-			Write-Host "OK new pipeline created: $name" 
+			Write-Host "OK new trigger created: $name" 
 
 			$newTrigger = New-AzDataFactoryV2Trigger -ResourceGroupName $resourcegroupname `
 			-DataFactoryName $datafactoryname -Name $trg_name `
 			-File $json
+			
+			<#
+			$startTrigger = Start-AzDataFactoryV2Trigger -ResourceGroupName $resourcegroupname `
+			-DataFactoryName $datafactoryname -TriggerName $trg_name 
+			#>
 		} 
 		
 

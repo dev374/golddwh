@@ -1,8 +1,8 @@
 # Project items for development
-01. Correct paths: mainpath, config etc. to be ready to install everywhere
++01. Correct paths: mainpath, config etc. to be ready to install everywhere
 +02. Setup azcopy. Create installation which copies azcopy to operations folder.
 03. Azcopy should load any file into input folder (landing container), from operations/import folder.
-04. Install up to datafactory. ADF should take .csv file as input (metadata_source, metadata_ref, ..) and put them as a table in the metadata database. Input files should be moved to an archive folder. 
+04. Install up to datafactory: pipelines and triggers. 
 05. Move out saved keys
 06. Generate jsons for datafactory
 07. Create logging procedure in all databases - and generate it automatically with the install

@@ -6,7 +6,7 @@
 	},
 
 	"storage": {
-		"storagename": "stordwh",
+		"storagename": "stordwhgold",
 		"storagekeynr": "key1",
 		"containers": "loaddata archive metadata"
 	},

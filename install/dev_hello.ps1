@@ -13,9 +13,9 @@ Write-Host "`n--> Creating (DEV) resources" -ForegroundColor Green
 
 
 & .\init_resources\createResourceGroup.ps1
-
-& .\init_resources\createStorage.ps1
 <#
+& .\init_resources\createStorage.ps1
+
 & .\init_resources\createServer.ps1
 
 & .\init_resources\createDatabase.ps1
@@ -28,8 +28,8 @@ Write-Host "`n--> Creating (DEV) Datafactory" -ForegroundColor Green
 & .\init_datafactory\createLinkedServices.ps1
 
 & .\init_datafactory\createDatasets.ps1
-
-& .\init_datafactory\createPipelines.ps1
 #>
+& .\init_datafactory\createPipelines.ps1
+
 
 sleep 1

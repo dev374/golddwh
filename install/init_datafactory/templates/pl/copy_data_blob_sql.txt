@@ -19,7 +19,7 @@
                 "userProperties": [
                     {
                         "name": "Source",
-                        "value": "<sourceblobfoldername>"
+                        "value": "<sourceloaddatablob>\\<pipelinename>.csv"
                     },
                     {
                         "name": "Destination",
@@ -37,7 +37,7 @@
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
                             "wildcardFileName": {
-                                "value": "<pipelinename>*.csv",
+                                "value": "<pipelinename>.csv",
                                 "type": "Expression"
                             },
                             "enablePartitionDiscovery": false

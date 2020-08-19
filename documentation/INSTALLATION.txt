@@ -5,4 +5,4 @@
 	- config of pl activities	: config_pipelines_activity
 - global config runs each time via initGlobalConfig file	
 - after pipelines installation, allow datafactory to access SQL server
-- etl logging is dine via SQL SP: whs_load_log which is defined in config_pipelines_activity.json file
+- etl logging is done via SQL SP: whs_load_log which is defined in config_pipelines_activity.json file
