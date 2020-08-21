@@ -1,4 +1,4 @@
-# Static datasets 
+﻿# Static datasets 
 $ds_config 			= $c.datasets.ds_config
 $ds_blob_folder		= $c.datasets.template_blob_folder
 $ds_blob_file		= $c.datasets.template_blob_file
@@ -19,9 +19,14 @@ ForEach ($d in $getds.Name) {
 	$dsarray += $d
 }
 
-# Create templates for each
-$joinedObject = Foreach ($row in $datasets) 
-{
+#
+### FUNCTIONS ###
+#
+
+function Create-DatasetJson {
+
+Param ([array]$row)
+
 	$createarray = @();
 
 	# SQL type
@@ -60,20 +65,55 @@ $joinedObject = Foreach ($row in $datasets)
 	$json = $(Join-Path $path_datasets "$name.json")
 	$createarray += $json
 	$dstemplate > $json
-	Write-Host "START dataset $name" 
-		
-	
-	# Create 
-	if($dsarray -eq $name) {
-		Write-Host "SKIP dataset: $name already exists"
-	} else {
-		Write-Host "OK new dataset created: $name" 
+	Write-Host "Created dataset $name in $json" 
+    return $json
+}	
 
-		$newDataset = New-AzDataFactoryV2Dataset -ResourceGroupName $resourcegroupname `
-		-DataFactoryName $datafactoryname -Name $name `
-		-File $json
-	} 
-	
-	
+function Generate-Dataset-FromJson {
+# v.1.0 initial
+
+Param ([string]$jsonfile,
+       [string]$datasetname,
+       [bool]$Overwrite)
+
+    # Get existing datasets
+    $global:getds = Get-AzDataFactoryV2Dataset -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
+    $dsarray = @()
+    ForEach ($d in $getds.Name) {
+	    $dsarray += "$d.json"
+    }
+
+    $datasetname = $datasetname -replace ".json", ""
+
+	if($overwrite -eq $true) {
+		$newDataset = Set-AzDataFactoryV2Dataset -Name $datasetname -DefinitionFile $jsonfile `
+		    -ResourceGroupName $resourcegroupname -DataFactoryName $datafactoryname -Force
+		
+		Write-Host "overwrite OK new dataset created: $datasetname" 
+    } else {
+
+	    if($dsarray -eq $datasetname) {
+		    Write-Host "SKIPPING dataset: $datasetname already exists"
+	    }  else {
+		
+		    Write-Host "OK new dataset created: $datasetname" 
+	    } 
+    }
+}
+
+#
+### MAIN PROGRAM ###
+#
+
+$datasetObject = ForEach ($row in $datasets) 
+{
+    $j = Create-DatasetJson $row
+}
+
+$filelist = Get-ChildItem -Path $path_datasets -File | Where-Object { ($_.Name -like '*.json') }
+
+$generateObject = ForEach ($row in $filelist) 
+{
+    $d = Generate-Dataset-FromJson $(Join-Path $path_datasets $row.Name) $($row.Name) -Overwrite 1
 }
 

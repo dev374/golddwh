@@ -75,17 +75,17 @@ $joinedObject = Foreach ($row in $pipelines)
 		$pl_template = $pl_template -replace "                 ", "`n"
 		$pl_template > $json
 		Write-Host "START pipeline: $name" 
+    $json > json2.json
 
-		
 		# Create pieline
 		if($plarray -eq $name) {
 			Write-Host "SKIP pipeline: $name already exists"
 		} else {
-			Write-Host "OK new pipeline created: $name" 
-
 			$newPipeline = New-AzDataFactoryV2Pipeline -ResourceGroupName $resourcegroupname `
 			-DataFactoryName $datafactoryname -Name $name `
 			-File $json
+			
+            Write-Host "OK new pipeline created: $name" 
 		} 
 		
 	
@@ -99,6 +99,7 @@ $joinedObject = Foreach ($row in $pipelines)
 		$tr_template = "$t_datafile"
 		$tr_template = $tr_template -replace "                 ", "`n"
 		$tr_template = $tr_template -replace "          ", "`n"
+		$tr_template = $tr_template -replace "		", "`n"
 		$tr_template = $tr_template -replace "<name>", "$trg_name"
 		$tr_template = $tr_template -replace "<pipelinename>", "$name"
 		$tr_template = $tr_template -replace "<blobPathBeginsWith>", "$trg_blobpath"

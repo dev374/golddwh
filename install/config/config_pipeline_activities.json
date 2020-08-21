@@ -1,19 +1,9 @@
 {
-	"blobs": {
-		"sourcemetadatablob": "metadata",
-		"sourceloaddatablob": "loaddata",
-		"targetarchiveblob": "archive",
-		"archivedatasetname": "dst_archive_all"
-	},
 	"logging": {
 		"logstoredprocedurename": "[dbo].[whs_log_load]",
 		"logloadinderrordpendendon": "Copy data SQL",
 		"statusstart": "STARTED",
 		"statusfinish": "FINISHED",
 		"statuserror": "ERROR"
-	},
-	"linkedservices": {
-		"storageblob": "conn_blobstorage",
-		"sqldwh": "conn_sqldwh"
 	}
 }

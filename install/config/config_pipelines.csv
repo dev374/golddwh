@@ -1,3 +1,5 @@
-typeid;pipelinetype;pipelinename;filename;inputs;outputs
-1;load_csv_data;dat_categories;dat_categories.csv;src_blob_in;dst_sql_in
-2;load_csv_data;dat_currencies;dat_currencies.csv;src_blob_in;dst_sql_in
+pipelineid;pipelinetype;pipelinename;filename;inputs;outputs;containername;createdataset;linkedServiceName;datasettype;foldertype;locationtype;flagfirstRowAsHeader
+1;load_csv_data;dat_categories;dat_categories.csv;src_dat_categories;dst_sql_in;metadata;1;conn_blobstorage;DelimitedText;String;AzureBlobStorageLocation;true
+2;load_csv_data;dat_currencies;dat_currencies.csv;src_dat_currencies;dst_sql_in;metadata;1;conn_blobstorage;DelimitedText;String;AzureBlobStorageLocation;true
+3;load_csv_data;meta_data_model;meta_data_model.csv;src_meta_data_model;dst_sql_in;loaddata;1;conn_blobstorage;DelimitedText;String;AzureBlobStorageLocation;true
+4;load_csv_data;meta_data_candidates;meta_data_candidates.csv;src_meta_data_candidates;dst_sql_in;loaddata;1;conn_blobstorage;DelimitedText;String;AzureBlobStorageLocation;true
