@@ -2,8 +2,12 @@
 	"logging": {
 		"logstoredprocedurename": "[dbo].[whs_log_load]",
 		"logloadinderrordpendendon": "Copy data SQL",
+		"archivedatasetname": "STARTED",
 		"statusstart": "STARTED",
 		"statusfinish": "FINISHED",
 		"statuserror": "ERROR"
+	},
+	"archive": {
+		"targetarchiveblob": "archive"
 	}
 }

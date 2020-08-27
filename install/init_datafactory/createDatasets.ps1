@@ -1,4 +1,6 @@
-﻿# Static datasets 
+﻿Write-Host "`n--> Creating (DEV) Datasets" -ForegroundColor Green
+
+# Static datasets 
 $ds_config 			= $c.datasets.ds_config
 $ds_blob_folder		= $c.datasets.template_blob_folder
 $ds_blob_file		= $c.datasets.template_blob_file
@@ -26,6 +28,7 @@ ForEach ($d in $getds.Name) {
 function Create-DatasetJson {
 
 Param ([array]$row)
+# v.1.0 initial
 
 	$createarray = @();
 
@@ -65,7 +68,9 @@ Param ([array]$row)
 	$json = $(Join-Path $path_datasets "$name.json")
 	$createarray += $json
 	$dstemplate > $json
-	Write-Host "Created dataset $name in $json" 
+
+	Write-Host "Dataset file: $name --> OK new JSON definition created in `
+							  $json"
     return $json
 }	
 
@@ -77,7 +82,7 @@ Param ([string]$jsonfile,
        [bool]$Overwrite)
 
     # Get existing datasets
-    $global:getds = Get-AzDataFactoryV2Dataset -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
+    $getds = Get-AzDataFactoryV2Dataset -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
     $dsarray = @()
     ForEach ($d in $getds.Name) {
 	    $dsarray += "$d.json"
@@ -87,16 +92,18 @@ Param ([string]$jsonfile,
 
 	if($overwrite -eq $true) {
 		$newDataset = Set-AzDataFactoryV2Dataset -Name $datasetname -DefinitionFile $jsonfile `
-		    -ResourceGroupName $resourcegroupname -DataFactoryName $datafactoryname -Force
+		-ResourceGroupName $resourcegroupname -DataFactoryName $datafactoryname -Force
 		
-		Write-Host "overwrite OK new dataset created: $datasetname" 
+		Write-Host "Dataset: $datasetname --> OK new dataset created (overwritten)"
     } else {
 
 	    if($dsarray -eq $datasetname) {
-		    Write-Host "SKIPPING dataset: $datasetname already exists"
-	    }  else {
-		
-		    Write-Host "OK new dataset created: $datasetname" 
+			Write-Host "Dataset: $datasetname --> NOK already exists" -ForegroundColor Red
+	    }  else {		
+			$newDataset = Set-AzDataFactoryV2Dataset -Name $datasetname -DefinitionFile $jsonfile `
+			-ResourceGroupName $resourcegroupname -DataFactoryName $datafactoryname
+
+			Write-Host "Dataset: $datasetname --> OK new dataset created"
 	    } 
     }
 }
@@ -114,6 +121,6 @@ $filelist = Get-ChildItem -Path $path_datasets -File | Where-Object { ($_.Name -
 
 $generateObject = ForEach ($row in $filelist) 
 {
-    $d = Generate-Dataset-FromJson $(Join-Path $path_datasets $row.Name) $($row.Name) -Overwrite 1
+    $d = Generate-Dataset-FromJson $(Join-Path $path_datasets $row.Name) $($row.Name) -Overwrite 0
 }
 
