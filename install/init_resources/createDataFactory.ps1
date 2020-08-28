@@ -1,6 +1,4 @@
-
-# Variables - set the resource group name, location, servername, database and allowed IP range
-$global:datafactoryname = $c.datafactory.datafactoryname
+# Create Data Factory
 
 write-host "
 Creating a new DF..."

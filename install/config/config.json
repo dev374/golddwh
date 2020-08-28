@@ -8,6 +8,7 @@
 	"storage": {
 		"storagename": "stordwhgold",
 		"storagekeynr": "key1",
+		"storagekeyfilename": "storagekey.txt",
 		"containers": "loaddata archive metadata"
 	},
 	"server": {
@@ -36,7 +37,7 @@
 		"triggers": "C:\\Dev\\golddwh\\install\\init_datafactory\\triggers\\"
 	},
 	"datafactory": {
-		"datafactoryname": "dfdwh883",
+		"datafactoryname": "dfdwh72",
 		"linkedserviceblob": "conn_blobstorage",
 		"linkedservicesql": "conn_sqldwh",
 		"linkedservicejsonext": ".json"

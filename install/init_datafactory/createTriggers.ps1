@@ -36,31 +36,36 @@ $p_start			= Get-Content -Path $(Join-Path $path_templates $pl_tem_start)
 $p_ending			= Get-Content -Path $(Join-Path $path_templates $pl_tem_ending) 
 $t_datafile  		= Get-Content -Path $(Join-Path $path_templates_tr $tr_tem_datafile) 
 
-# Get existing pipelines and triggers
-$global:getpl = Get-AzDataFactoryV2Pipeline -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
-$global:gettr = Get-AzDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
-$plarray = @()
-$trarray = @()
-ForEach ($p in $getpl.Name) {
-	$plarray += $p
-}
-ForEach ($p in $gettr.Name) {
-	$trarray += $p
-}
-
 #
 ### FUNCTIONS ###
 #
 
+# Get existing pipelines and triggers
+$plarray = @()
+$global:getpl = Get-AzDataFactoryV2Pipeline -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
+ForEach ($p in $getpl.Name) {
+	$plarray += $p
+}
+
+function Get-AllTriggers {
+	$trarray = @()
+	$global:gettr = Get-AzDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
+	ForEach ($p in $gettr.Name) {
+		$trarray += $p
+	}
+	return $trarray
+}
+
 function Create-Triggers-FromPipeline {
 
-Param ([array]$row)
+Param ([array]$row,
+	   [string]$overwrite)
 # v.1.0 initial, v.1.1 lilmited to file json (based on Create-DatasetJson)
 
 # Create corresponding triggers	
 	$trg_dataset = $pipelines | Where-Object {$_.PipelineName -eq "$($row.pipelinename)"}
 	$trg_blobpath = "/$($trg_dataset.containername)/blobs/$name"
-	$trg_name = "trg_$name"
+	$trg_name = "trg_$($row.pipelinename)"
 	$json_tr = $(Join-Path $path_triggers "$trg_name.json") #?
 
 	$tr_template = "$t_datafile"
@@ -68,35 +73,60 @@ Param ([array]$row)
 	$tr_template = $tr_template -replace "          ", "`n"
 	$tr_template = $tr_template -replace "		", "`n"
 	$tr_template = $tr_template -replace "<triggername>", "$trg_name"
-	$tr_template = $tr_template -replace "<pipelinename>", "$name"
+	$tr_template = $tr_template -replace "<pipelinename>", "$($row.pipelinename)"
 	$tr_template = $tr_template -replace "<blobPathBeginsWith>", "$trg_blobpath"
 	$tr_template = $tr_template -replace "<tenantid>", "$subscriptionid"
 	$tr_template = $tr_template -replace "<resourcegroup>", "$resourcegroupname"
 	$tr_template = $tr_template -replace "<storagename>", "$storagename"
 	$tr_template > $json_tr
 
-	if($trarray -eq $name) {
-		Write-Host "Trigger: $trg_name --> NOK already exists" -ForegroundColor Red
-	} else {
-		Write-Host "Trigger: $trg_name --> OK new trigger created" 
+	if(($trarray -ne $trg_name) -or $overwrite) {
 
 		$newTrigger = New-AzDataFactoryV2Trigger -ResourceGroupName $resourcegroupname `
 		-DataFactoryName $datafactoryname -Name $trg_name -Force `
 		-File $json_tr
+
+		Write-Host "Trigger: $trg_name --> OK new trigger created" 
 		
-		<## v0
-		$startTrigger = Start-AzDataFactoryV2Trigger -ResourceGroupName $resourcegroupname `
-		-DataFactoryName $datafactoryname -TriggerName $trg_name -Force
-		##>
+	} else {
+		Write-Host "Trigger: $trg_name --> NOK already exists" -ForegroundColor Red		
+		
 	} 
-	
 }	
+
+function Start-Triggers {
+
+Param ([array]$trigger_array)
+
+	Write-Host " *** Starting all triggers" -ForegroundColor Blue
+	Foreach ($t in $trigger_array) {
+		$actionTrigger = Start-AzDataFactoryV2Trigger -ResourceGroupName $resourcegroupname `
+		-DataFactoryName $datafactoryname -TriggerName $t -Force
+	}
+}
+
+function Stop-Triggers {
+
+Param ([array]$trigger_array)
+
+	Write-Host " *** Stopping all triggers" -ForegroundColor Red
+	Foreach ($t in $trigger_array) {
+		$actionTrigger = Stop-AzDataFactoryV2Trigger -ResourceGroupName $resourcegroupname `
+		-DataFactoryName $datafactoryname -TriggerName $t -Force
+	}
+}
+
+#
+## PROGRAM
+#
+
+$s = Stop-Triggers(Get-AllTriggers)
 
 $joinedObject = Foreach ($row in $pipelines) 
 {
-	$name = "$($row.pipelinename)"
-	$t = Create-Triggers-FromPipeline $row
+	$t = Create-Triggers-FromPipeline $row $overwrite = 0
 }
 
+$w = Start-Triggers(Get-AllTriggers)
 
 

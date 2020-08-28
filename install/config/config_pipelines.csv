@@ -3,3 +3,4 @@ pipelineid;pipelinename;filename;inputs;outputs;containername;createdataset;link
 2;dat_currencies;dat_currencies.csv;src_dat_currencies;dst_sql_in;loaddata;1;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
 3;meta_data_model;meta_data_model.csv;src_meta_data_model;dst_sql_in;metadata;1;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
 4;meta_data_candidates;meta_data_candidates.csv;src_meta_data_candidates;dst_sql_in;metadata;1;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
+3;data_model_mapping;data_model_mapping.csv;src_data_model_mapping;dst_sql_in;loaddata;1;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE

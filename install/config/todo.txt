@@ -1,5 +1,9 @@
-todo
+# TODO
+- logging sp
+- disable trigger prior set with force
+
+# DONE
 - one config file, merge pipelines and datasets
 - data sets shoul be 1 for 1 pipeline
 - define in ds and pl
-- 
+ 

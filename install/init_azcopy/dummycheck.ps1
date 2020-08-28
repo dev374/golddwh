@@ -1,1 +1,1 @@
-echo "Dummycheck - working OK"
+echo "Dummycheck: working OK"

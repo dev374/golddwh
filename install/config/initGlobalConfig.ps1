@@ -16,16 +16,27 @@ $global:subscriptionName = $c.general.subscriptionname
 $global:resourceGroupName = $c.server.resourcegroupname
 $global:location = $c.server.location
 $global:serverName = $c.server.servername
-$global:databaseName = $c.server.databaseName
+$global:databaseName = $c.database.databaseName
+$global:objective = $c.database.objective
+
+$global:startIp = $c.server.startIp
+$global:endIp = $c.server.endip
+$global:adminLogin = $c.database.adminLogin
+$global:adminPass = $c.database.adminPass
+
 $global:datafactoryname = $c.datafactory.datafactoryname
 $global:linkedserviceblob = $c.datafactory.linkedserviceblob
 $global:linkedservicesql = $c.datafactory.linkedservicesql
 $global:linkedservicejsonext = $c.datafactory.linkedservicejsonext
 $global:storagename = $c.storage.storagename
+$global:storagekeyfilename = $c.storage.storagekeyfilename
 $global:containers = $c.storage.containers
+$global:storagekey = Get-Content -Path $(Join-Path $path_config $storagekeyfilename) -Encoding utf8
+
 $global:loginstallfile = $c.path.loginstallfile
 $global:temploc = $c.general.temploc
 $global:main = $(pwd).Path
+
 <# For future use
 $global: = $c.
 #>
@@ -33,7 +44,7 @@ $global: = $c.
 # Connect-AzAccount
 if($connectazaccount -eq 1) {
 	Connect-AzAccount
-	Select-AzSubscription -Subscription $subscriptionname #"Visual Studio Professional Subscription"
+	Select-AzSubscription -Subscription $subscriptionname
 }
 
 $s = Get-AzSubscription

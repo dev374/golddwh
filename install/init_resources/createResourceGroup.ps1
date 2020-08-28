@@ -1,14 +1,4 @@
 
-$global:location = $c.server.location
-$global:serverName = $c.server.servername
-$global:databaseName = $c.server.databaseName
-$global:startIp = $c.server.startIp
-$global:endIp = $c.server.endip
-
-$global:adminLogin = $c.database.adminLogin
-$global:adminPass = $c.database.adminPass
-$global:databaseName = $c.database.databaseName
-
 # Create a resource group
 $rgn = Get-AzResourceGroup
 $rgnarray = @()

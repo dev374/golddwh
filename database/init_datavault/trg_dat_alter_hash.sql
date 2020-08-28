@@ -22,21 +22,22 @@ AS
 --ELSE
 BEGIN
 
-
-
-	DECLARE @i tinyint
-	DECLARE @sql NVARCHAR(max)
+	DECLARE @i TINYINT,
+			@tabcnt TINYINT = 1,
+			@sql NVARCHAR(max)
 	DECLARE @coltohash TABLE (
-		object_id bigint, 
-		tabname varchar(100),
-		schemaname varchar(100),
-		colname varchar (100), 
-		colorderid int
+		object_id BIGINT, 
+		tabname VARCHAR(100),
+		schemaname VARCHAR(100),
+		colname VARCHAR (100), 
+		colorderid INT
 	)
 	DECLARE @tabtohash TABLE (
-		schemaname varchar(100),
-		tabname varchar(100),
-		concatcols nvarchar (max) 
+		id TINYINT,
+		altersql VARCHAR(max),
+		schemaname VARCHAR(100),
+		tabname VARCHAR(100),
+		concatcols NVARCHAR (max) 
 	)
 
 	INSERT INTO @coltohash
@@ -45,10 +46,14 @@ BEGIN
 	JOIN sys.tables t ON t.object_id = c.object_id
 	JOIN sys.schemas s ON t.schema_id = s.schema_id
 	WHERE c.object_id in (
-		SELECT t.object_id FROM sys.tables t --WHERE name like 'dat_%'
+		SELECT t.object_id FROM sys.tables t
 	)
-	AND s.name like 'adf'
+	AND lower(s.name) like 'adf'
+	AND lower(t.name) not like 'xx%'
+	AND lower(t.name) not like 'meta_%'
 	ORDER BY column_id
+	
+
 	
 	SELECT @sql = N'SELECT CONCAT(' + 
 					STRING_AGG(h.colname, ',') WITHIN GROUP (ORDER BY colorderid) + 
@@ -59,6 +64,8 @@ BEGIN
 	
 	INSERT INTO @tabtohash
 	SELECT
+		ROW_NUMBER() over (order by tabname) as id,
+		'ALTER TABLE ' + schemaname + '.' + tabname + concatcols as altersql,
 		schemaname,
 		tabname,
 		concatcols
@@ -70,14 +77,21 @@ BEGIN
 						'CONCAT(' + STRING_AGG(h.colname, ',') WITHIN GROUP (ORDER BY colorderid) + ') '+
 					'), 2)))' as concatcols
 		FROM @coltohash h
+		WHERE lower(h.tabname) not in (SELECT tabname FROM @coltohash c WHERE c.colname like '%hash%')
 		GROUP BY h.schemaname, h.tabname
 	) x
-
-	SELECT'ALTER TABLE ' + schemaname + '.' + tabname + concatcols
-	FROM @tabtohash
 	
-	EXEC sp_executesql @sql
+	SELECT @tabcnt = COUNT(DISTINCT tabname) FROM @tabtohash
+	WHILE @tabcnt > 0
+	BEGIN
+		SELECT @sql = altersql FROM @tabtohash WHERE id = @tabcnt
+		EXEC sp_executesql @sql
+		SET @tabcnt -= 1
+	END
 
 END
+GO
+
+ENABLE TRIGGER [trg_dat_alter_hash] ON DATABASE
 GO
 
