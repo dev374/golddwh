@@ -1,10 +1,17 @@
 
-/****** Object:  Table [dbo].[wht_jobs_log]    Script Date: 21.02.2020 12:18:24 *****
-DROP TABLE if exists [dbo].[wht_jobs_log]
-GO
+/*
+
+	DROP TABLE if exists [dbo].[wht_jobs_log]
+	GO
+
 */
 
-/****** Object:  Table [dbo].[wht_jobs_log]    Script Date: 21.02.2020 12:18:24 ******/
+ /* =========================================
+   Author:		Miko³aj Paszkowski
+   Create date: 2020-08-31
+   Verison:     2020-08-31	v.1.0		Initial version
+	
+   ========================================== */
 SET ANSI_NULLS ON
 GO
 

@@ -1,8 +1,19 @@
-- config files:
+1. Configuration
+	Set config files:
 	- global config				: config.json
-	- list of datasets			: config_datasets
-	- list of pipelines 		: config_pipelines
-	- config of pl activities	: config_pipelines_activity
-- global config runs each time via initGlobalConfig file	
-- after pipelines installation, allow datafactory to access SQL server
-- etl logging is done via SQL SP: whs_load_log which is defined in config_pipelines_activity.json file
+	- list of datasets			: config_datasets.xlsx
+	- list of pipelines 		: config_pipelines.xlsx
+	- config of activities		: config_pipelines_activity.xlsx
+	Global config runs each time via initGlobalConfig script.
+2. Datafactory
+	This is ETL tool, that loads data and metadata files. They need to be uploaded into either of 2 blob containers:
+	- loaddata
+	- metadata
+	Install in correct order:
+	- linked services 
+	- datasets
+	- pielines
+	- triggers
+	After pipelines installation, allow datafactory to access SQL server.
+3. Logging
+	ETL logging is done via SQL procedure whs_load_log which is defined in config_pipelines_activity.json file

@@ -19,11 +19,11 @@
                 "userProperties": [
                     {
                         "name": "Source",
-                        "value": "<sourceloaddatablob>//<filename>"
+                        "value": "<sourceloaddatablob>\\<filename>"
                     },
                     {
                         "name": "Destination",
-                        "value": "<targetarchiveblob>/@{utcnow()}/<filename>"
+                        "value": "<targetarchiveblob>\\@{utcnow()}\\<filename>"
                     },
                     {
                         "name": "PipelineTime",

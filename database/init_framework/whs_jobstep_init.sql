@@ -4,6 +4,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+DROP PROCEDURE if exists [dbo].[whs_jobstep_init]
+GO
+
 /* =============================================
    Author:		Miko³aj Paszkowski
    Create date: 2020-02-20
@@ -12,7 +15,7 @@ GO
 				2020-04-09	v.1.2		Output uid
 
    ========================================== */
-ALTER PROCEDURE [dbo].[whs_jobstep_init]
+CREATE PROCEDURE [dbo].[whs_jobstep_init]
 				( @step_name VARCHAR(100) = NULL,
 				  @run_id NVARCHAR(8) = NULL,
 				  @step_line SMALLINT = 0,

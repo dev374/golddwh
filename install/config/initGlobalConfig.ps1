@@ -18,6 +18,7 @@ $global:location = $c.server.location
 $global:serverName = $c.server.servername
 $global:databaseName = $c.database.databaseName
 $global:objective = $c.database.objective
+$global:path_config = $c.path.config
 
 $global:startIp = $c.server.startIp
 $global:endIp = $c.server.endip

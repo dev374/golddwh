@@ -48,11 +48,15 @@
                             },
                             "type": "String"
                         },
-                        "file_name": {
-                            "value": {
-                                "value": "<pipelinename>",
-                                "type": "Expression"
-                            },
+                        "source": {
+							"value": "<sourceloaddatablob>\\<pipelinename>.csv"
+                            "type": "String"
+                        },
+                        "destination": {
+							"value": {
+								"value": "adf.@{pipeline().Pipeline}",
+								"type": "Expression"
+							},
                             "type": "String"
                         }
                     }

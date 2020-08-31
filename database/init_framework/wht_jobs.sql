@@ -1,9 +1,17 @@
+/*
 
-DROP TABLE if exists wht_jobs
-
-/****** Object:  Table [dbo].[wht_jobs]    Script Date: 21.02.2020 12:26:40 *****
+	DROP TABLE if exists wht_jobs
+	GO
 
 */
+
+ /* =========================================
+   Author:		Miko³aj Paszkowski
+   Create date: 2020-08-31
+   Verison:     2020-08-31	v.1.0		Initial version
+	
+   ========================================== */
+
 SET ANSI_NULLS ON
 GO
 

@@ -14,14 +14,16 @@ GO
    Verison:     2020-03-05	v.1.0		Initial version
 				2020-03-10	v.1.1		Improvements
 				2020-03-23	v.1.2		Added table_name, size and row count
+				2020-08-31	v.1.3		Fixing multiple imports  +source destination -file_name
 
    ========================================== */
 CREATE PROCEDURE [dbo].[whs_log_load]
 				( @run_id NVARCHAR(max), -- pipeline run id
 				  @pipeline_name NVARCHAR(100) = NULL, -- pipeline name
-				  @file_name NVARCHAR(100) = NULL, -- file name
 				  @start_dttm NVARCHAR(100) = NULL, -- load start
-				  @action NVARCHAR(100) = NULL -- start or finish
+				  @action NVARCHAR(100) = NULL, -- start or finish
+				  @source NVARCHAR(100) = NULL,
+				  @destination NVARCHAR(100) = NULL 
 				)
 AS
 BEGIN TRY
@@ -48,14 +50,6 @@ BEGIN TRY
 	ELSE
 		SELECT @start_dttm2 = TRY_CAST(LEFT(@start_dttm, 22) as datetime);
 	
-	-- Calculate end date
-	IF (@end_dttm is NULL)   
-	BEGIN
-		SET @end_dttm = GETDATE();
-		SELECT @duration = CONVERT(int, ISNULL(DATEDIFF(second, @start_dttm2, @end_dttm), -1)),
-			   @result_message = 'Load of ' + ISNULL(@file_name, @na) + ' ' + @action;
-	END
-
 	-- Action when START
 	IF (@action like '%START%' OR @action = '1')
 		INSERT INTO [dbo].[wht_loads_log]
@@ -75,8 +69,8 @@ BEGIN TRY
 			 SELECT
 				   @run_id
 				   ,ISNULL(@pipeline_name, @na)
-				   ,ISNULL(@file_name, @na)
-				   ,@na
+				   ,ISNULL(@source, @na)
+				   ,ISNULL(@destination, @na)
 				   ,null
 				   ,null
 				   ,@start_dttm2
@@ -88,30 +82,21 @@ BEGIN TRY
 	
 	-- Action when COMPLETED
 	ELSE
-
+	BEGIN
 		DECLARE @table_name VARCHAR(100) = NULL
-		DECLARE @table_schema_name VARCHAR(100) = NULL
 		DECLARE @cnt_sql VARCHAR(100) = NULL
 		DECLARE @cnt_rows TABLE (cnt INT NULL)
 		DECLARE @table_size NUMERIC(18,2) = NULL
 
-		-- Calculate table name
-		select @table_schema_name = s.name + '.' + t.name,
-			   @table_name = t.name
-		from sys.tables t 
-		join sys.schemas s on t.schema_id = s.schema_id
-		where t.name like '%' + @file_name + '%'
-
 		-- Calculate rows
-		SELECT @cnt_sql = 'SELECT count(1) FROM ' + @table_schema_name
+		SELECT @cnt_sql = 'SELECT count(1) FROM ' + @destination
 
 		INSERT INTO @cnt_rows(cnt)
-		EXEC sp_sqlexec @cnt_sql      -- SELECT cnt FROM @cnt_rows
+		EXEC sp_sqlexec @cnt_sql
 
 		-- Calculate table size
 			SELECT
 				@table_size = CAST(ROUND(((SUM(a.total_pages) * 8) / 1024.00), 2) AS NUMERIC(18, 2)) 
-				--CAST(ROUND(((SUM(a.used_pages) * 8) / 1024.00), 2) AS NUMERIC(36, 2)) AS UsedSpaceMB
 			FROM
 				sys.tables t
 			INNER JOIN
@@ -129,17 +114,16 @@ BEGIN TRY
 			GROUP BY
 				t.Name, s.Name, p.Rows
 
-		/*
-		-------- SELECT variables to use -------- 
-		SELECT @table_name AS TableName, 
-			   cnt AS TotalRows, 
-			   @table_size AS TotalSpaceMB
-		FROM @cnt_rows
-	    */
+		-- Calculate end date
+		IF (@end_dttm is NULL)   
+		BEGIN
+			SET @end_dttm = GETDATE();
+			SELECT @duration = CONVERT(int, ISNULL(DATEDIFF(second, @start_dttm2, @end_dttm), -1)),
+				   @result_message = 'Load of ' + ISNULL(@source, @na) + ' ' + @action;
+		END
 
 		UPDATE t
 		SET		
-			[table_name] = @table_schema_name,
 			[table_size_MB] = @table_size,
 			[row_count] = (SELECT cnt FROM  @cnt_rows),
 			[load_end_dttm] = @end_dttm,
@@ -147,13 +131,13 @@ BEGIN TRY
 			[load_desc] = @result_message
 		FROM [dbo].[wht_loads_log] t
 		WHERE [run_id] = @run_id
-
+	END
 	-- =============================================
 END TRY
 BEGIN CATCH
-	-- End step: Handle ERROR
+	-- End step: Handle error
 
-	SELECT @result_message = 'Load logging for ' + ISNULL(@file_name, @na) + ': ' + @run_id + ' FAILED ';
+	SELECT @result_message = 'Load logging for ' + ISNULL(@source, @na) + ': ' + @run_id + ' FAILED ';
 
 	SELECT
 	     @Error_NUMBER      = ERROR_NUMBER()

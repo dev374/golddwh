@@ -29,10 +29,10 @@ Write-Host "`n--> Creating (DEV) Datafactory" -ForegroundColor Green
 & .\init_datafactory\createLinkedServices.ps1
 
 & .\init_datafactory\createDatasets.ps1
-
-& .\init_datafactory\createPipelines.ps1
 #>
+& .\init_datafactory\createPipelines.ps1
+<#
 & .\init_datafactory\createTriggers.ps1
-<##>
+#>
 
 sleep 1
