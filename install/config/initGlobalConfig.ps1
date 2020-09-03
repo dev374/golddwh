@@ -1,6 +1,7 @@
 # This should run from any location
 # Global config load within a file or separately:returns variable $c to use in every script
-$global:c = Get-Content $(Join-Path $pwd "config\config.json") | ConvertFrom-Json
+$global:main = "C:\Dev\golddwh\install"
+$global:c = Get-Content $(Join-Path $main "config\config.json") | ConvertFrom-Json
 
 if(!$c) { 
 	echo 'Empty config. Load config first'
@@ -19,6 +20,8 @@ $global:serverName = $c.server.servername
 $global:databaseName = $c.database.databaseName
 $global:objective = $c.database.objective
 $global:path_config = $c.path.config
+$global:importpath = $c.path.import
+$global:etlpath = $c.path.etl
 
 $global:startIp = $c.server.startIp
 $global:endIp = $c.server.endip
@@ -33,10 +36,12 @@ $global:storagename = $c.storage.storagename
 $global:storagekeyfilename = $c.storage.storagekeyfilename
 $global:containers = $c.storage.containers
 $global:storagekey = Get-Content -Path $(Join-Path $path_config $storagekeyfilename) -Encoding utf8
+$global:saskey = $c.storage.saskey
+$global:blobendpointmetadata = $c.storage.blobendpointmetadata
+$global:blobendpointloaddata = $c.storage.blobendpointloaddata
 
 $global:loginstallfile = $c.path.loginstallfile
 $global:temploc = $c.general.temploc
-$global:main = $(pwd).Path
 
 <# For future use
 $global: = $c.

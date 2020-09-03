@@ -1,4 +1,4 @@
-﻿source_type;source_system;schema_name;table_name;column_name;ordinal_position;is_nullable;data_type;character_maximum_length;numeric_precision;numeric_scale;datetime_precision;active_ind;business_name;window_date_column;filter_column;business_key_ind;distinct_ind;special_ind;comment
+﻿source_type;source_system;schema_name;table_name;column_name;ordinal_position;is_nullable;data_type;character_length;numeric_precision;numeric_scale;datetime_precision;active_ind;business_name;window_date_column;filter_column;business_key_ind;distinct_ind;special_ind;comment
 db;api;api;g_users;id;1;NO;int;NULL;32;0;NULL;1;NULL;NULL;NULL;1;0;0;NULL
 db;api;api;g_users;created;2;YES;timestamp;NULL;NULL;NULL;6;1;NULL;NULL;NULL;0;0;0;NULL
 db;api;api;g_users;created_by;3;YES;varchar;100;NULL;NULL;NULL;0;NULL;NULL;NULL;0;0;0;NULL

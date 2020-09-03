@@ -3,6 +3,14 @@
             "pipelinename": {
                 "type": "string",
                 "defaultValue": "<pipelinename>"
+            },
+            "importcontainer": {
+                "type": "string",
+                "defaultValue": "<sourceloaddatablob>"
+            },
+            "filename": {
+                "type": "string",
+                "defaultValue": "<filename>"
             }
         },
         "variables": {

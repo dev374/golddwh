@@ -36,11 +36,18 @@ $p_start			= Get-Content -Path $(Join-Path $path_templates $pl_tem_start)
 $p_ending			= Get-Content -Path $(Join-Path $path_templates $pl_tem_ending) 
 $t_datafile  		= Get-Content -Path $(Join-Path $path_templates_tr $tr_tem_datafile) 
 
-# Get existing pipelines and triggers
+# Get existing datasets, pipelines and triggers
+$global:getds = Get-AzDataFactoryV2Dataset -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
 $global:getpl = Get-AzDataFactoryV2Pipeline -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
 $global:gettr = Get-AzDataFactoryV2Trigger -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
+ 
+$dsarray = @()
 $plarray = @()
 $trarray = @()
+
+ForEach ($p in $getds.Name) {
+	$dsarray += $p
+}
 ForEach ($p in $getpl.Name) {
 	$plarray += $p
 }
@@ -85,8 +92,6 @@ Param ([string]$jsonfile,
        [bool]$overwrite)
 
     # Get existing datasets
-    $global:getds = Get-AzDataFactoryV2Dataset -ResourceGroupName $resourceGroupName -DataFactoryName $datafactoryname
-    $dsarray = @()
     ForEach ($d in $getds.Name) {
 	    $dsarray += "$d.json"
     }

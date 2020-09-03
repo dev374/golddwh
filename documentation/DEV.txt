@@ -17,7 +17,7 @@ This file contains:
 5. ordinal position
 6. is_nullable
 7. datatype
-8. char length (default max)
+8. character_length (default max)
 9. business_key_ind
 10. active_ind
 

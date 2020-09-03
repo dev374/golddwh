@@ -1,1 +1,17 @@
-afff
+########################
+# Generate tables with master generator
+########################
+- Table holding definitions	
+	- c:\Dev\golddwh\database\init_datavault\master_generator.sql
+- Core entries 
+	- c:\Dev\golddwh\metadata\master_generator\create\ = core definitions
+	- c:\Dev\golddwh\metadata\master_generator\inserts\ = insert statements
+	- c:\Dev\golddwh\metadata\master_generator\replace = 
+	
+########################
+# How to import new tables?
+########################
+1. Copy csv files into etl\import
+2. Edit config_pipelines
+3. Install new pipelines with install_run.bat
+4. Run import_run.bat

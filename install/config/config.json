@@ -9,7 +9,10 @@
 		"storagename": "stordwhgold",
 		"storagekeynr": "key1",
 		"storagekeyfilename": "storagekey.txt",
-		"containers": "loaddata archive metadata"
+		"containers": "loaddata archive metadata",
+		"saskey": "?sv=2019-12-12&ss=b&srt=co&sp=rwdlacx&se=2021-09-03T14:50:49Z&st=2020-09-03T06:50:49Z&spr=https&sig=FbsxALlG4iP%2F1T40mU%2FWs%2BvDD94DLOIFJz51xY%2F8ulY%3D",
+		"blobendpointmetadata": "https://stordwhgold.blob.core.windows.net/metadata/",
+		"blobendpointloaddata": "https://stordwhgold.blob.core.windows.net/loaddata/"		
 	},
 	"server": {
 		"resourcegroupname": "resourcegroupdwh",
@@ -27,6 +30,8 @@
 	"path": {
 		"logfile": "C:\\Dev\\golddwh\\documentation\\logs\\loginstall_",
 		"install": "C:\\Dev\\golddwh\\install\\",
+		"import": "C:\\Dev\\golddwh\\etl\\import",
+		"etl": "C:\\Dev\\golddwh\\etl",
 		"config": "C:\\Dev\\golddwh\\install\\config\\",
 		"adflinkedservices": "C:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\",
 		"adftemplatesds": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\ds\\",
