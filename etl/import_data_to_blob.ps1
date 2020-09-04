@@ -1,12 +1,11 @@
-cls
-Write-Host "`n--> Loading data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Green
 
 ########################
 # Variables
 ########################
-#& c:\Dev\golddwh\install\config\initGlobalConfig.ps1
-
+cls
+& c:\Dev\golddwh\install\config\initGlobalConfig.ps1
 cd $etlpath
+Write-Host "`n--> Loading data to the cloud storage: $blobendpointmetadata" -ForegroundColor Green
 
 # Function
 Function ExcelToCsv ($File) {
@@ -21,7 +20,7 @@ Function ExcelToCsv ($File) {
 		$wb = $Excel.Workbooks.Open($excelFile)
 		
 		ForEach ($ws in $wb.Worksheets) {
-            echo " * $Newfiletemp *"
+            Write-Host " * Converting to csv file: $Newfiletemp *" -ForegroundColor Magenta
 			$ws.SaveAs($Newfiletemp, 6)
 		}
 		$Excel.displayalerts = $true
@@ -48,26 +47,37 @@ ForEach ($p in $getpl) {
 	}
 }
 
-
+$flagloaddata = 0
+$flagmetadata = 0
 $imparray = Get-ChildItem $importpath -File
 
 ForEach ($i in $imparray.Name) {
 	if($i -like "*.xlsx") {
         ExcelToCsv -File $i
     }
+
 	if ($piparray.ContainsKey($i)) {
-		echo 1
+		if($i -like 'dat*') { $flagloaddata = 1 }
+		if($i -like 'met*') { $flagmetadata = 1 }
 	}
 
 }
 
-# Copy when file has its pipeline, else message 'Pipeline for the file ot found'
-.\azcopy copy $(Join-Path $importpath "*.csv") $($blobendpointmetadata + $saskey) --recursive=true
+# Copy when file has its pipeline, else message 'Pipeline for the file or import files not found'
+	if($flagloaddata -eq 1) {
+ 		Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
+       .\azcopy copy $(Join-Path $importpath "dat*.csv") $($blobendpointloaddata + $saskey) --recursive=true
+    }
+	if($flagmetadata -eq 1) {
+ 		Write-Host "`n--> Copying data to the container: loaddata ($blobendpointmetadata)" -ForegroundColor Blue
+       .\azcopy copy $(Join-Path $importpath "met*.csv") $($blobendpointmetadata + $saskey) --recursive=true
+    }
 
 ########################
 # Archive
 ########################
 $curdate = Get-Date -Format yyyy-MM-dd_hhmm
 $newfolder = New-Item -Path $(Join-Path $importpath "..\archive\$curdate") -ItemType Directory
-$newfolder
+Write-Host "`n--> Archiving data in th folder: $newfolder " -ForegroundColor Green
 Move-Item $(Join-Path $importpath *.*) $newfolder
+sleep 1

@@ -64,7 +64,7 @@ Param ([array]$row,
 
 # Create corresponding triggers	
 	$trg_dataset = $pipelines | Where-Object {$_.PipelineName -eq "$($row.pipelinename)"}
-	$trg_blobpath = "/$($trg_dataset.containername)/blobs/$name"
+	$trg_blobpath = "/$($trg_dataset.containername)/blobs/$($row.pipelinename)"
 	$trg_name = "trg_$($row.pipelinename)"
 	$json_tr = $(Join-Path $path_triggers "$trg_name.json") #?
 

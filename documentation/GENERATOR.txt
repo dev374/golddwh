@@ -13,5 +13,5 @@
 ########################
 1. Copy csv files into etl\import
 2. Edit config_pipelines
-3. Install new pipelines with install_run.bat
+3. Install new pipelines and triggers with install_run.bat
 4. Run import_run.bat
