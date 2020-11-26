@@ -5,3 +5,4 @@ pipelineid;pipelinename;filename;inputs;outputs;containername;createdataset;link
 4;meta_lsat_mapping;meta_lsat_mapping.csv;src_meta_lsat_mapping;dst_sql_in;metadata;4;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
 5;meta_pit_mapping;meta_pit_mapping.csv;src_meta_pit_mapping;dst_sql_in;metadata;5;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
 6;meta_ref_mapping;meta_ref_mapping.csv;src_meta_ref_mapping;dst_sql_in;metadata;6;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
+7;data_model_mapping;data_model_mapping.csv;src_data_model_mapping;dst_sql_in;metadata;7;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE

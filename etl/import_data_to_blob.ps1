@@ -56,21 +56,23 @@ ForEach ($i in $imparray.Name) {
         ExcelToCsv -File $i
     }
 
-	if ($piparray.ContainsKey($i)) {
-		if($i -like 'dat*') { $flagloaddata = 1 }
-		if($i -like 'met*') { $flagmetadata = 1 }
+	if ($piparray.ContainsKey($i)) { 
+		if($i -like 'met*' -or $i -like 'data_model*') { $flagmetadata = 1 }
+		else { $flagloaddata = 1 }
 	}
-
-}
+$i 
+$flagmetadata
+$flagloaddata
+} #  $piparray.(1)
 
 # Copy when file has its pipeline, else message 'Pipeline for the file or import files not found'
-	if($flagloaddata -eq 1) {
- 		Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "dat*.csv") $($blobendpointloaddata + $saskey) --recursive=true
-    }
 	if($flagmetadata -eq 1) {
+ 		Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
+       .\azcopy copy $(Join-Path $importpath "dat*.csv") $($blobendpointmetadata + $saskey) --recursive=true
+    }
+	if($flagloaddata -eq 1) {
  		Write-Host "`n--> Copying data to the container: loaddata ($blobendpointmetadata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "met*.csv") $($blobendpointmetadata + $saskey) --recursive=true
+       .\azcopy copy $(Join-Path $importpath "met*.csv") $($blobendpointloaddata + $saskey) --recursive=true
     }
 
 ########################

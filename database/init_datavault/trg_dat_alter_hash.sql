@@ -1,17 +1,16 @@
--- ===========================================================
--- Create database ddl trigger template for Azure SQL Database
--- ===========================================================
--- Drop the database ddl trigger if it already exists
-IF EXISTS(
-  SELECT *
-    FROM sys.triggers
-   WHERE name = N'trg_dat_alter_hash'
-     AND parent_class_desc = N'DATABASE'
-)
-	DROP TRIGGER trg_dat_alter_hash ON DATABASE
+/****** Object:  DdlTrigger [trg_dat_alter_hash]    Script Date: 01.11.2020 00:22:43 ******/
+SET ANSI_NULLS ON
 GO
 
-CREATE TRIGGER trg_dat_alter_hash ON DATABASE
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+ALTER TRIGGER [trg_dat_alter_hash] ON DATABASE
 	FOR CREATE_TABLE
 AS
 --IF IS_MEMBER ('db_owner') = 0
@@ -72,9 +71,9 @@ BEGIN
 	FROM (
 		SELECT  h.schemaname as schemaname,
 				h.tabname as tabname,
-				N' ADD Hash as ' +
+				N' ADD hash_diff as ' +
 					'(UPPER(CONVERT(char(32), HASHBYTES(''MD5'', '+
-						'CONCAT(' + STRING_AGG(h.colname, ',') WITHIN GROUP (ORDER BY colorderid) + ') '+
+						'CONCAT(' + STRING_AGG(h.colname, ';') WITHIN GROUP (ORDER BY colorderid) + ') '+
 					'), 2)))' as concatcols
 		FROM @coltohash h
 		WHERE lower(h.tabname) not in (SELECT tabname FROM @coltohash c WHERE c.colname like '%hash%')
@@ -85,6 +84,7 @@ BEGIN
 	WHILE @tabcnt > 0
 	BEGIN
 		SELECT @sql = altersql FROM @tabtohash WHERE id = @tabcnt
+		PRINT @sql
 		EXEC sp_executesql @sql
 		SET @tabcnt -= 1
 	END
@@ -92,6 +92,4 @@ BEGIN
 END
 GO
 
-ENABLE TRIGGER [trg_dat_alter_hash] ON DATABASE
-GO
 

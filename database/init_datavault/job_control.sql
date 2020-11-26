@@ -12,15 +12,17 @@ GO
 
 CREATE TABLE mtd.job_control (
 	id int IDENTITY (1,1) NOT NULL,
-	system_type VARCHAR(100) NOT NULL,
-	job_type VARCHAR(100) NOT NULL,
+	system_type VARCHAR(100) NULL,
+	job_type VARCHAR(100) NULL,
 	schema_name VARCHAR(100) NOT NULL,
-	job_name VARCHAR(100) NOT NULL,
+	table_name VARCHAR(100) NOT NULL,
 	sql_1 VARCHAR(MAX) NOT NULL,
 	sql_2 VARCHAR(MAX) NULL,
-	sql_3 VARCHAR(MAX) NULL,
+	run_1 as replace(sql_1, '''',''''''),
+	run_2 as replace(sql_2, '''',''''''),
 	insert_dts DATETIME DEFAULT GETDATE(),
-	CONSTRAINT pk_job_control PRIMARY KEY (generator_type)
+	changed_by VARCHAR(100) NOT NULL DEFAULT 'BI admin',
+	CONSTRAINT pk_job_control PRIMARY KEY (id)
 )
 GO
 
