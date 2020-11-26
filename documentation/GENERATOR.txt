@@ -1,17 +1,29 @@
 ########################
 # Generate tables with master generator
 ########################
+- Create schemas
+	- c:\Dev\golddwh\database\init_datavault\create_schema.sql
 - Table holding definitions	
 	- c:\Dev\golddwh\database\init_datavault\master_generator.sql
 - Core entries 
-	- c:\Dev\golddwh\metadata\master_generator\create\ = core definitions
-	- c:\Dev\golddwh\metadata\master_generator\inserts\ = insert statements
-	- c:\Dev\golddwh\metadata\master_generator\replace = 
+	- c:\Dev\golddwh\metadata\master_entries\ = core definitions (skeletons) for hub, hsat, lnk, lsat,..
+- Import table mappings from the files
+	- c:\Dev\golddwh\metadata\generate_rdv\ = rdv tables DDLs joint with imported "meta_xxx_mapping" tables
+
+########################
+# Maintain data inserts to the tables
+########################
+- Manipulate 
+	- c:\Dev\golddwh\metadata\insert_definitions\ = 
 	
 ########################
 # How to import new tables?
 ########################
 1. Copy csv files into etl\import
-2. Edit config_pipelines
-3. Install new pipelines and triggers with install_run.bat
-4. Run import_run.bat
+2. Edit config_pipelines file
+3. Outcomment 
+	& .\init_datafactory\createDatasets.ps1
+	& .\init_datafactory\createPipelines.ps1
+	& .\init_datafactory\createTriggers.ps1
+4. Install new pipelines and triggers with install_run.bat
+5. Run import_run.bat
