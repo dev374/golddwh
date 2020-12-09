@@ -1,23 +1,23 @@
 ########################
 # Generate tables with master generator
 ########################
-- Create schemas
+1. Create schemas
 	- c:\Dev\golddwh\database\init_datavault\create_schema.sql
-- Table holding definitions	
+2. Table holding definitions	
 	- c:\Dev\golddwh\database\init_datavault\master_generator.sql
-- Core entries 
+3. Core entries 
 	- c:\Dev\golddwh\metadata\master_entries\ = core definitions (skeletons) for hub, hsat, lnk, lsat,..
-- Import table mappings from the files
+4. Import table mappings from the files
 	- c:\Dev\golddwh\metadata\generate_rdv\ = rdv tables DDLs joint with imported "meta_xxx_mapping" tables
 
 ########################
 # Maintain data inserts to the tables
 ########################
-- Manipulate 
+1. Manipulate 
 	- c:\Dev\golddwh\metadata\insert_definitions\ = 
 	
 ########################
-# How to import new tables?
+# How to import new meta mappings tables?
 ########################
 1. Copy csv files into etl\import
 2. Edit config_pipelines file

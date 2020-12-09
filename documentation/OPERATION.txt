@@ -1,3 +1,28 @@
+# How to create new ETL data load?
 1. Install new interafaces (dst, src, pip, trg) with install 
 2. Create and edit data_model_mapping (sources) & run_import
-3. 
+ 
+# How to create new rdv table?
+1. Execute 'master_generate.sql" / stored procedure "master_generate_rdv"
+	DECLARE	@return_value int
+	EXEC	@return_value = [dbo].[master_generate_rdv] @execute_sql = 0
+	SELECT	'Return Value' = @return_value
+	GO
+
+
+# How to drop an existing table(s)?
+1. Execute sp "master_dropper_rdv"
+	DECLARE	@return_value int
+	EXEC	@return_value = [dbo].[master_dropper_rdv] @execute_sql = 0
+	SELECT	'Return Value' = @return_value
+	GO
+	
+# How jobs are constructed?
+
+# How to define a new job?
+
+# How to run complete job?
+
+# How to run a job step?
+
+# How to activate/deactivate job?

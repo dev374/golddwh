@@ -7,12 +7,12 @@ Scalable Data Warehouse project using Data Vault 2.0
 git clone https://github.com/dev374/golddwh.git
 
 Steps:
-1. Azure setup: SQL Server, Databases, Datafactory
-2. DWH Framework install on SQL Server
-3. Understand datamodel and collect sources
-4. Edit metadata and run generators
-6. ETL setup with generated code 
-7. Automate & Tweak
+	1. Azure setup: SQL Server, Databases, Datafactory
+	2. DWH Framework install on SQL Server
+	3. Understand datamodel and collect sources
+	4. Edit metadata and run generators
+	6. ETL setup with generated code 
+	7. Automate & Tweak
 
 #### Prerequisites
 PowerShell modeules Az. Remove AzureRM.
