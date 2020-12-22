@@ -1,3 +1,7 @@
+########################
+# Installation
+########################
+
 1. Configuration
 	Set config files:
 	- global config				: config.json

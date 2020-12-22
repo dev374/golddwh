@@ -1,23 +1,22 @@
-/****** Object:  StoredProcedure [dbo].[whs_jobstep_finish]    Script Date: 20.12.2020 21:01:34 ******/
+/****** Object:  StoredProcedure [dbo].[dwc_jobstep_init]    Script Date: 20.12.2020 20:56:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+DROP PROCEDURE if exists [dbo].[dwc_jobstep_init]
+GO
+
 /* =============================================
    Author:		Miko³aj Paszkowski
    Create date: 2020-02-20
-   Verison:     2020-03-02	v.1.0		Initial version
-				2020-03-09	v.1.1		Added @step_uid
-				2020-12-20	v.1.2		Test- working
+   Verison:     2020-12-20	v.1.3	    @step_uid and testing - working
    ========================================== */
-ALTER PROCEDURE [dbo].[whs_jobstep_finish]
+CREATE PROCEDURE [dbo].[dwc_jobstep_init]
 				( @step_name VARCHAR(100) = NULL,
 				  @run_id NVARCHAR(8) = NULL,
-				  @start_dttm DATETIME = NULL,
-				  @row_cnt INT = NULL,
-				  @step_uid UNIQUEIDENTIFIER = NULL		-- see whs_jobstep_init
-				)
+				  @step_line SMALLINT = 0,
+				  @step_uid UNIQUEIDENTIFIER = NULL OUTPUT)
 AS
 BEGIN TRY
 	SET NOCOUNT ON;
@@ -32,28 +31,51 @@ BEGIN TRY
 	DECLARE
 		 @job_specifics			VARCHAR(100)	= 'Standalone step',
 		 @result_message		VARCHAR(max)	= NULL,
+		 @start_dttm			DATETIME		= GETDATE(),
 		 @end_dttm				DATETIME		= NULL,
-		 @duration				INT				= NULL
+		 @row_cnt				INT				= NULL,
+		 @duration				INT				= NULL,
+		 @new_uid				UNIQUEIDENTIFIER = COALESCE(@step_uid, NEWID())
+
 	-- =============================================
-	-- End step: Finish
-	SELECT @end_dttm = GETDATE()
-		  ,@duration = DATEDIFF(second, @start_dttm, @end_dttm)
-	SELECT @result_message = 'Step: ' + @step_name + ' completed in ' + convert(varchar,@duration) + ' second(s). Rows merged: ' + convert(varchar, @row_cnt) + ' ';
-	PRINT 'sp job finish'
-	PRINT COALESCE(@step_uid, NEWID())
-	UPDATE t
-	   SET row_cnt	  = @row_cnt,
-		   comment    = @result_message,
-		   end_dttm   = @end_dttm,
-		   duration   = @duration,
-		   result     = 0
-	FROM dbo.wht_steps_log t 
-	WHERE 
-		t.id = COALESCE(@step_uid, t.id)
-	AND	run_id = @run_id 
-	AND t.step_name = @step_name
-	
-	RETURN 0;
+	-- Start step: Initialize job step
+	IF ( 0 = (SELECT count(*)
+			    FROM dbo.wht_steps_log  t
+			   WHERE t.id = @new_uid )	OR
+		@run_id = convert(varchar,(convert(varchar, @start_dttm, 112)) ) OR
+		@step_line > 0 )
+		INSERT INTO dbo.wht_steps_log (id, step_id,step_name,step_seq_nr,job_id,run_id,comment,start_dttm,result)
+		SELECT 
+			@new_uid								as id,
+			t.id									as step_id,
+			@step_name								as step_name,
+			t.step_seq_nr + @step_line				as step_seq_nr,
+			t.job_id								as job_id,			
+			@run_id									as run_id,
+			'Step started'							as comment,
+			@start_dttm								as start_dttm,
+			1										as result
+		 FROM [dbo].wht_steps t
+		WHERE t.step_name = @step_name
+	ELSE
+		UPDATE j
+		   SET  comment			= 'Step found and restarted',
+				start_dttm		= @start_dttm,
+				duration		= 0
+		  FROM dbo.wht_steps_log j
+		 WHERE j.id = @new_uid
+
+	/*  @uid
+	-- v.1.2 Return uid
+	SELECT @step_uid = id
+	  FROM dbo.wht_steps_log
+	 WHERE @run_id = run_id
+	   AND 'step started' = comment
+	*/
+	PRINT 'sp job init uid'
+	PRINT @new_uid
+	SELECT @new_uid
+	RETURN 
 
 	-- =============================================
 END TRY
@@ -62,7 +84,7 @@ BEGIN CATCH
 
 	SELECT @end_dttm = GETDATE()
 		  ,@duration = DATEDIFF(second, @start_dttm, @end_dttm)
-	SELECT @result_message = 'Step init: ' + @step_name + ' FAILED ';
+	SELECT @result_message = 'Jobstep init: ' + @step_name + ' FAILED ';
 
 	SELECT
 	     @Error_NUMBER      = ERROR_NUMBER()
@@ -95,3 +117,4 @@ BEGIN CATCH
 	RETURN 1;
 
 END CATCH
+

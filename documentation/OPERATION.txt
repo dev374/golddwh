@@ -1,3 +1,7 @@
+########################
+# Operation manual
+########################
+
 # How to create new ETL data load?
 1. Install new interafaces (dst, src, pip, trg) with install 
 2. Create and edit data_model_mapping (sources) & run_import
@@ -18,6 +22,10 @@
 	GO
 	
 # How jobs are constructed?
+1. Jobs are defined is table "wht_jobs" with log table "wht_jobs_log". 
+2. Each job is divided into steps, defined in the "wht_steps" table and log in "wht_job_step_log".
+3. Each step should be entered into the wht_steps table, otherwise no logging occurs.
+4. Each step is a sp. It has to have a strusture like "[sp_list_job_control]".
 
 # How to define a new job?
 

@@ -1,6 +1,7 @@
 ########################
 # Generate tables with master generator
 ########################
+
 1. Create schemas
 	- c:\Dev\golddwh\database\init_datavault\create_schema.sql
 2. Table holding definitions	
@@ -13,12 +14,14 @@
 ########################
 # Maintain data inserts to the tables
 ########################
+
 1. Manipulate 
 	- c:\Dev\golddwh\metadata\insert_definitions\ = 
 	
 ########################
 # How to import new meta mappings tables?
 ########################
+
 1. Copy csv files into etl\import
 2. Edit config_pipelines file
 3. Outcomment 
@@ -27,3 +30,23 @@
 	& .\init_datafactory\createTriggers.ps1
 4. Install new pipelines and triggers with install_run.bat
 5. Run import_run.bat
+
+########################
+# DWH Workflow
+########################
+
+Specify source data model and save via excel in the file "data_model_mapping.csv". Save in the "etl/import" folder and hit run_import.bat. Data model mapping is sent to storage and imported in the "metadata" database. In the storage it is copied to "archive" container with proper timestamp. In the DB it is imported into "data_model_mapping" (schema adf) table, while previous is logged in the table "data_model_history" (schema log) as an entry and deleted. Import logging occurs via called stored procedure on that database.
+This file contains:
+1. entity name e.g. users
+2. source schema name
+3. source table name
+4. source column name
+5. ordinal position
+6. is_nullable
+7. datatype
+8. character_length (default max)
+9. business_key_ind
+10. active_ind
+
+Data model determines input data. Input data are incoming .csv files.
+Raw data vault model are files

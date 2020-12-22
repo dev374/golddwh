@@ -1,23 +1,18 @@
-/****** Object:  StoredProcedure [dbo].[whs_jobstep_finish]    Script Date: 20.12.2020 21:01:34 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
+
 /* =============================================
-   Author:		Miko≥aj Paszkowski
-   Create date: 2020-02-20
-   Verison:     2020-03-02	v.1.0		Initial version
-				2020-03-09	v.1.1		Added @step_uid
-				2020-12-20	v.1.2		Test- working
+   Author:		Miko≈Çaj Paszkowski
+   Create date: 2020-12-20
+   Verison:     2020-12-20	v.1.0		Initial version
+
    ========================================== */
-ALTER PROCEDURE [dbo].[whs_jobstep_finish]
-				( @step_name VARCHAR(100) = NULL,
-				  @run_id NVARCHAR(8) = NULL,
-				  @start_dttm DATETIME = NULL,
-				  @row_cnt INT = NULL,
-				  @step_uid UNIQUEIDENTIFIER = NULL		-- see whs_jobstep_init
-				)
+ALTER PROCEDURE [dbo].[sp_list_job_control]
+				( @run_id NVARCHAR(8) = '12345678' )
 AS
 BEGIN TRY
 	SET NOCOUNT ON;
@@ -29,41 +24,46 @@ BEGIN TRY
         ,@Error_SEV             INT             = NULL
         ,@Error_STATE           INT             = NULL
         ,@Error_COUNT           INT             = 0
+        ,@Error_SPECIFICS       SQL_VARIANT     = NULL
 	DECLARE
-		 @job_specifics			VARCHAR(100)	= 'Standalone step',
+		 @step_name				VARCHAR(100),
 		 @result_message		VARCHAR(max)	= NULL,
+		 @start_dttm			DATETIME		= GETDATE(),
 		 @end_dttm				DATETIME		= NULL,
-		 @duration				INT				= NULL
+		 @duration				INT				= NULL,
+		 @row_cnt				INT				= 0,
+		 @step_uid				UNIQUEIDENTIFIER = NEWID();
+	-- =============================================		 
+	SELECT @run_id = COALESCE(@run_id, convert(varchar,@@SPID))
+	SELECT @step_name = OBJECT_NAME(@@PROCID)	
 	-- =============================================
-	-- End step: Finish
-	SELECT @end_dttm = GETDATE()
-		  ,@duration = DATEDIFF(second, @start_dttm, @end_dttm)
-	SELECT @result_message = 'Step: ' + @step_name + ' completed in ' + convert(varchar,@duration) + ' second(s). Rows merged: ' + convert(varchar, @row_cnt) + ' ';
-	PRINT 'sp job finish'
-	PRINT COALESCE(@step_uid, NEWID())
-	UPDATE t
-	   SET row_cnt	  = @row_cnt,
-		   comment    = @result_message,
-		   end_dttm   = @end_dttm,
-		   duration   = @duration,
-		   result     = 0
-	FROM dbo.wht_steps_log t 
-	WHERE 
-		t.id = COALESCE(@step_uid, t.id)
-	AND	run_id = @run_id 
-	AND t.step_name = @step_name
-	
-	RETURN 0;
+	-- Start step: Initialize job step
+	EXEC @step_uid = dbo.whs_jobstep_init @step_name, @run_id, @step_uid = @step_uid
+	-- =============================================
+	PRINT N'sp step uid: ' + convert(nvarchar(max), @step_uid)
+
+	WAITFOR DELAY '00:00:05'
+	--INSERT INTO rdv.hsat_card (card_id)
+	SELECT t.id FROM mtd.job_control t
+	--SELECT  5/0
 
 	-- =============================================
+	-- End step: Handle output
+	PRINT 'sp finish'
+	EXEC dbo.whs_jobstep_finish @step_name, @run_id, @start_dttm, @row_cnt, @step_uid
+	RETURN 0;
+	-- =============================================
+
 END TRY
 BEGIN CATCH
-	-- End step: Handle ERROR
+	-- End step: Handle ERROR 
+	PRINT N'sp catch'
+	-- Update steps
 
 	SELECT @end_dttm = GETDATE()
 		  ,@duration = DATEDIFF(second, @start_dttm, @end_dttm)
-	SELECT @result_message = 'Step init: ' + @step_name + ' FAILED ';
-
+		  ,@result_message = 'Step: ' + @step_name + ' FAILED ';
+    
 	SELECT
 	     @Error_NUMBER      = ERROR_NUMBER()
         ,@Error_PROC        = ERROR_PROCEDURE()
@@ -87,11 +87,15 @@ BEGIN CATCH
 			[error_proc]	= @Error_PROC,
 			[error_sev]		= @Error_SEV,
 			[error_state]	= @Error_STATE,
-			[error_count]	= @Error_COUNT
+			[error_count]	= @Error_COUNT -- select * 
 	  FROM dbo.wht_steps_log t
-	 WHERE t.start_dttm = @start_dttm
-	   AND t.step_name = @step_name
+	 WHERE t.id = @step_uid 
+	
+	PRINT convert(varchar(100), @Error_MSG)
 
 	RETURN 1;
 
 END CATCH
+GO
+
+
