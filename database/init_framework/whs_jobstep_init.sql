@@ -11,11 +11,11 @@ GO
    Author:		Miko³aj Paszkowski
    Create date: 2020-02-20
    Verison:     2020-12-20	v.1.3	    @step_uid and testing - working
+				2020-12-22	v.1.4	    fixed logging, when more the same steps in the same logging
    ========================================== */
 CREATE PROCEDURE [dbo].[whs_jobstep_init]
 				( @step_name VARCHAR(100) = NULL,
 				  @run_id NVARCHAR(8) = NULL,
-				  @step_line SMALLINT = 0,
 				  @step_uid UNIQUEIDENTIFIER = NULL OUTPUT)
 AS
 BEGIN TRY
@@ -42,14 +42,13 @@ BEGIN TRY
 	IF ( 0 = (SELECT count(*)
 			    FROM dbo.wht_steps_log  t
 			   WHERE t.id = @new_uid )	OR
-		@run_id = convert(varchar,(convert(varchar, @start_dttm, 112)) ) OR
-		@step_line > 0 )
+		@run_id = convert(varchar,(convert(varchar, @start_dttm, 112)) ) )
 		INSERT INTO dbo.wht_steps_log (id, step_id,step_name,step_seq_nr,job_id,run_id,comment,start_dttm,result)
 		SELECT 
 			@new_uid								as id,
-			COALESCE(t.id, 'n/a')					as step_id,
+			COALESCE(MAX(t.id), 'n/a')				as step_id,
 			@step_name								as step_name,
-			COALESCE(t.step_seq_nr + @step_line, -1) as step_seq_nr,
+			COALESCE(MAX(t.step_seq_nr), -1)		as step_seq_nr,
 			COALESCE(t.job_id, -1)					as job_id,			
 			@run_id									as run_id,
 			'Step started'							as comment,
@@ -57,6 +56,8 @@ BEGIN TRY
 			1										as result
 		 FROM [dbo].wht_steps t
 		WHERE t.step_name = @step_name
+		  AND t.active = 1
+		GROUP BY t.step_name, t.job_id  -- if more steps in the same JOB, then log the max only
 	ELSE
 		UPDATE j
 		   SET  comment			= 'Step found and restarted',
@@ -65,13 +66,6 @@ BEGIN TRY
 		  FROM dbo.wht_steps_log j
 		 WHERE j.id = @new_uid
 
-	/*  @uid
-	-- v.1.2 Return uid
-	SELECT @step_uid = id
-	  FROM dbo.wht_steps_log
-	 WHERE @run_id = run_id
-	   AND 'step started' = comment
-	*/
 	PRINT 'sp job init uid'
 	PRINT @new_uid
 	SELECT @new_uid

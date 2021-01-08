@@ -1,17 +1,20 @@
+/****** Object:  StoredProcedure [dbo].[sp_hub_user_insert]    Script Date: 30.12.2020 20:04:23 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
+DROP PROCEDURE if exists [dbo].[sp_hub_user_insert]
+GO
 
 /* =============================================
-   Author:		Mikołaj Paszkowski
-   Create date: 2020-12-20
-   Verison:     2020-12-20	v.1.0		Initial version
+   Author:		Generic by Mikołaj Paszkowski
+   Create date: 2020-12-30
+   Verison:     2020-12-30	v.1.0		Initial version
 
    ========================================== */
-ALTER PROCEDURE [dbo].[sp_list_job_control]
+CREATE PROCEDURE [dbo].[sp_hub_user_insert]
 				( @run_id NVARCHAR(8) = '12345678' )
 AS
 BEGIN TRY
@@ -42,9 +45,21 @@ BEGIN TRY
 	-- =============================================
 	PRINT N'sp step uid: ' + convert(nvarchar(max), @step_uid)
 
-	WAITFOR DELAY '00:00:05'
-	--INSERT INTO rdv.hsat_card (card_id)
-	SELECT t.id FROM mtd.job_control t
+	INSERT INTO rdv.hub_user (hub_user_hk, load_cycle_seq, record_source, insert_dts, changed_by, user_id)
+	SELECT 
+		g.hash,
+		1,
+		'Step name ' + @step_name + '',
+		@start_dttm,
+		@run_id,
+		g.id 
+	FROM api.g_users g -- stg_table_name
+	INNER JOIN adf.meta_hub_mapping t
+	  ON t.table_name = 'hub_user'
+	  AND t.active_ind = 1
+	LEFT JOIN rdv.hub_user u 
+	  ON g.hash = u.hub_user_hk
+	WHERE u.hub_user_hk IS NULL
 
 	-- =============================================
 	-- End step: Handle output
@@ -95,6 +110,3 @@ BEGIN CATCH
 	RETURN 1;
 
 END CATCH
-GO
-
-

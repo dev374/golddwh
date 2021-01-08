@@ -1,17 +1,20 @@
+/****** Object:  StoredProcedure [dbo].[sp_hsat_account_insert]    Script Date: 30.12.2020 20:04:23 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
+DROP PROCEDURE if exists [dbo].[sp_hsat_account_insert]
+GO
 
 /* =============================================
-   Author:		Mikołaj Paszkowski
-   Create date: 2020-12-20
-   Verison:     2020-12-20	v.1.0		Initial version
+   Author:		Generic by Mikołaj Paszkowski
+   Create date: 2020-12-30
+   Verison:     2020-12-30	v.1.0		Initial version
 
    ========================================== */
-ALTER PROCEDURE [dbo].[sp_list_job_control]
+CREATE PROCEDURE [dbo].[sp_hsat_account_insert]
 				( @run_id NVARCHAR(8) = '12345678' )
 AS
 BEGIN TRY
@@ -42,9 +45,25 @@ BEGIN TRY
 	-- =============================================
 	PRINT N'sp step uid: ' + convert(nvarchar(max), @step_uid)
 
-	WAITFOR DELAY '00:00:05'
-	--INSERT INTO rdv.hsat_card (card_id)
-	SELECT t.id FROM mtd.job_control t
+	INSERT INTO rdv.hsat_account (
+		hub_account_hk, load_cycle_seq, record_source, insert_dts, changed_by, delete_ind,
+		account_id, account_ref_id, created_dts, modified_dts, account_status_id)
+	SELECT 
+		g.hash,
+		1,
+		'Step name ' + @step_name + '',
+		@start_dttm,
+		@run_id,
+		0,
+		g.id,
+		g.ref_id,
+		g.created,
+		g.modified,
+		g.status_id
+	FROM api.g_account g -- stg_table_name
+	LEFT JOIN rdv.hsat_account h 
+	  ON g.hash = h.hub_account_hk
+	WHERE h.hub_account_hk IS NULL
 
 	-- =============================================
 	-- End step: Handle output
@@ -95,6 +114,3 @@ BEGIN CATCH
 	RETURN 1;
 
 END CATCH
-GO
-
-
