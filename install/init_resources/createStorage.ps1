@@ -41,5 +41,15 @@ if (-not(Test-Path($storagekeyfile))) {
 $context = New-AzStorageContext -StorageAccountName $storagename -StorageAccountKey $newkey
 sleep 1
 
-$containers.split() | New-AzStorageContainer -Permission Container -Context $context
+# Create containers if doesn't exist
+$ec = Get-AzStorageContainer -Context $context
+$containers.split() | ForEach {
+	if($ec.Name -like $_) {
+		echo "OK. Container $_ exists"
+	} else {
+		$_ | New-AzStorageContainer -Permission Container -Context $context  # create new container
+	}
+}
+
+## old way ## $containers.split() | New-AzStorageContainer -Permission Container -Context $context
 

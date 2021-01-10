@@ -69,8 +69,7 @@ Param ([array]$row)
 	$createarray += $json
 	$dstemplate > $json
 
-	Write-Host "Dataset file: $name --> OK new JSON definition created in `
-							  $json"
+	Write-Host "Dataset file: $name --> OK new JSON definition created in $json"
     return $json
 }	
 

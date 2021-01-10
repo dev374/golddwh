@@ -4,11 +4,11 @@ $global:main = Join-Path $pwd ""
 $global:c = Get-Content $(Join-Path $main "config\config.json") | ConvertFrom-Json
 
 if(!$c) { 
-	echo 'Empty config. Load config first'
+	echo ' Empty config. Load config first'
 	pwd
 	exit
 } else {
-    echo "Config loaded"
+    Write-Host "`n Config loaded from installation path $main" -ForegroundColor Cyan
 }
 
 # Global variables - they are that many scripts may use

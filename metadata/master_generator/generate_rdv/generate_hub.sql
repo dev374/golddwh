@@ -1,4 +1,4 @@
-SELECT  
+select 
 	replace(
 		replace(
 			replace(
@@ -6,8 +6,8 @@ SELECT
 			, '<column_statement_list>', h.column_name+' '+h.data_type+' NOT NULL')
 		, '<table_name>', h.table_name) 
 	, '<schema_name>', h.schema_name 
-	) + ';' + char(13)
+	)
 from [mtd].[master_generator] g
 cross join adf.meta_hub_mapping h
 where generator_type = 'create_hub_table'
-order by h.column_position;
+order by h.column_position 

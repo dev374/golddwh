@@ -2,23 +2,31 @@
 
 Write-Host "`n--> Creating (DEV) AzCopy" -ForegroundColor Green
 
-$azloc = (curl https://aka.ms/downloadazcopy-v10-windows -MaximumRedirection 0 -ErrorAction silentlycontinue).headers.location
-$etlloc = $main + "\..\etl"
+$etlloc = $c.path.etl
 $azdest = $temploc + "\azcopy.zip"
 
-wget $azloc -outfile $azdest
-expand-archive -path $azdest -DestinationPath $temploc
-cd $temploc
-$p = $(Get-ChildItem -Filter "*azcopy*windows*").Name | Sort-Object -Property LastWriteTime -Desc | Select -First 1
-cd $p
-cp ./azcopy.exe $etlloc -force
-cd $etlloc
-Get-ChildItem -Filter "*azcopy*"
+if (-not(Test-Path($(Join-Path $etlloc "azcopy.exe")))) {
+    Write-Host "`n Downloading AzCopy" -ForegroundColor Cyan
+    $azloc = (curl https://aka.ms/downloadazcopy-v10-windows -MaximumRedirection 0 -ErrorAction silentlycontinue).headers.location
+	wget $azloc -outfile $azdest
+	expand-archive -path $azdest -DestinationPath $temploc -Force
 
-# Clean up
-rm $azdest
-rmdir $($temploc + "\" + $p) 
+	cd $temploc
+	$p = $(Get-ChildItem -Filter "azcopy*windows*").Name | Sort-Object -Property LastWriteTime -Desc | Select -First 1
+	
+	cd $(Join-Path $temploc $p)
+	cp ./azcopy.exe $etlloc -force
+	cd $etlloc
+	Get-ChildItem -Filter "*azcopy*"
 
+	# Clean up
+	rm $azdest -Recurse
+	if (Test-Path( $($temploc + "\" + $p) )) {
+		rmdir $($temploc + "\" + $p) -Force
+	}
+} else {
+	Write-Host "`n The file $(Join-Path $etlloc "azcopy.exe") already exists. Continue." -ForegroundColor Cyan
+}
 <#
 #>
 

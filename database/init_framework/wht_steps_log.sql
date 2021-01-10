@@ -1,12 +1,13 @@
+/*
 
 	DROP TABLE if exists [dbo].[wht_steps_log]
 	GO
 
+*/
  /* =========================================
    Author:		Miko³aj Paszkowski
    Create date: 2020-08-31
    Verison:     2020-08-31	v.1.0		Initial version
-				2020-12-20	v.1.1		Run_id
 	
    ========================================== */
 SET ANSI_NULLS ON
@@ -18,11 +19,11 @@ GO
 CREATE TABLE [dbo].[wht_steps_log](
 	[id] uniqueidentifier NOT NULL, -- IDENTITY(1000,1) NOT NULL,
 	[job_id] INT NULL,
-	--[job_name] varchar(100) NULL,
-	[run_id] nvarchar(8) NOT NULL,
-	[step_seq_nr] [int] NOT NULL,
+	[job_name] varchar(100) NULL,
 	[step_id] [int] NOT NULL,
 	[step_name] [varchar](100) NOT NULL,
+	[step_seq_nr] [int] NOT NULL,
+	[run_id] nvarchar(8) NOT NULL,
 	[row_cnt] [int] NULL,
 	[comment] [varchar](max) NULL,
 	[start_dttm] [datetime] NOT NULL,
@@ -39,6 +40,7 @@ CREATE TABLE [dbo].[wht_steps_log](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[wht_steps_log] ADD  DEFAULT ((NEWID())) FOR [id]
 ALTER TABLE [dbo].[wht_steps_log] ADD  DEFAULT ((0)) FOR [result]
 GO
 

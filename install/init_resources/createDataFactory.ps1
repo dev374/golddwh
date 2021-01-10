@@ -1,9 +1,18 @@
 # Create Data Factory
 
-write-host "
-Creating a new DF..."
+$edf = Get-AzDataFactoryV2 -ResourceGroupName $resourceGroupName
+if($edf.DatafactoryName -like $datafactoryname) {
+		echo "OK. Datafactoryname $datafactoryname exists"
 
-# Create DF
-$df = New-AzDataFactoryV2 -ResourceGroupName $resourceGroupName `
-    -Name $datafactoryname `
-    -Location $location
+} else {
+	# Create DF
+	echo "OK. Creating a new DF..."
+	$df = New-AzDataFactoryV2 -ResourceGroupName $resourceGroupName `
+		-Name $datafactoryname `
+		-Location $location
+		
+	If ($df) {
+		write-host "OK. New Data Factory is called $df.DatafactoryName"
+	}
+}
+

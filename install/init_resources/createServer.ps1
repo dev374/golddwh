@@ -1,10 +1,3 @@
-# Config load
-$c = Get-Content .\config.json | ConvertFrom-Json
-
-if(!$c) { 
-	echo 'Empty config. Load config first'
-	exit
-}
 
 # Create a server with a system wide unique server name
 $srv = Get-AzSqlServer
@@ -15,7 +8,7 @@ ForEach ($s in $srv.servername) {
 if ($srvarray -like $serverName) {
 	echo "The $serverName already exists"
 } else {
-	echo "OK creating $serverName" 
+	echo "OK creating SQL Server called $serverName" 
 
     # Create server
     $server = New-AzSqlServer -ResourceGroupName $resourceGroupName `

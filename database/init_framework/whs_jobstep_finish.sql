@@ -1,7 +1,10 @@
-/****** Object:  StoredProcedure [dbo].[whs_jobstep_finish]    Script Date: 20.12.2020 21:01:34 ******/
+/****** Object:  StoredProcedure [dbo].[whs_jobstep_finish]    Script Date: 02.03.2020 12:58:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
+GO
+
+DROP PROCEDURE if exists [dbo].[whs_jobstep_finish]
 GO
 
 /* =============================================
@@ -9,9 +12,8 @@ GO
    Create date: 2020-02-20
    Verison:     2020-03-02	v.1.0		Initial version
 				2020-03-09	v.1.1		Added @step_uid
-				2020-12-20	v.1.2		Test- working
    ========================================== */
-ALTER PROCEDURE [dbo].[whs_jobstep_finish]
+CREATE PROCEDURE [dbo].[whs_jobstep_finish]
 				( @step_name VARCHAR(100) = NULL,
 				  @run_id NVARCHAR(8) = NULL,
 				  @start_dttm DATETIME = NULL,
@@ -34,13 +36,13 @@ BEGIN TRY
 		 @result_message		VARCHAR(max)	= NULL,
 		 @end_dttm				DATETIME		= NULL,
 		 @duration				INT				= NULL
+
 	-- =============================================
 	-- End step: Finish
 	SELECT @end_dttm = GETDATE()
 		  ,@duration = DATEDIFF(second, @start_dttm, @end_dttm)
 	SELECT @result_message = 'Step: ' + @step_name + ' completed in ' + convert(varchar,@duration) + ' second(s). Rows merged: ' + convert(varchar, @row_cnt) + ' ';
-	PRINT 'sp job finish'
-	PRINT COALESCE(@step_uid, NEWID())
+
 	UPDATE t
 	   SET row_cnt	  = @row_cnt,
 		   comment    = @result_message,
@@ -53,6 +55,7 @@ BEGIN TRY
 	AND	run_id = @run_id 
 	AND t.step_name = @step_name
 	
+
 	RETURN 0;
 
 	-- =============================================

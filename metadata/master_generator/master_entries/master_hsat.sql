@@ -19,7 +19,7 @@ INSERT INTO mtd.master_generator (
 )
 ;
 ALTER TABLE <schema_name>.<table_name>
-ADD CONSTRAINT pk_<table_name> PRIMARY KEY (<hub_table_name>_hk)
+ADD CONSTRAINT pk_<table_name> PRIMARY KEY (<table_name>_hk)
 ;
 CREATE UNIQUE INDEX ui_<table_name> ON <schema_name>.<table_name> (<column_ui_list>)
 ;')
