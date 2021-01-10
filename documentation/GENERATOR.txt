@@ -16,7 +16,7 @@
 ########################
 
 1. Manipulate 
-	- c:\Dev\golddwh\metadata\insert_definitions\ = 
+	- c:\Dev\golddwh\metadata\generator\insert_definitions\ = 
 	
 ########################
 # How to import new meta mappings tables?

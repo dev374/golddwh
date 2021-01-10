@@ -1,5 +1,5 @@
 cls
-cd "c:\Dev\golddwh\install\"
+cd $main
 
 Write-Host "`n--> Loading configuration" -ForegroundColor Green
 & .\config\initGlobalConfig.ps1

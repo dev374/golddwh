@@ -2,13 +2,13 @@
 # Project items for development
 ########################
 
-08. Running procedures
-	- sp with dybamic sql conver
+05. Move out saved keys
+
+++++++++
++08. Running procedures
+	- sp with dybamic sql convert
 	- log proces
 	- document
-05. Move out saved keys
-07. Create logging procedure in all databases - and generate it automatically with the install
-++++++++
 +01. Correct paths: mainpath, config etc. to be ready to install everywhere
 +02. Setup azcopy. Create installation which copies azcopy to operations folder.
 +03. Azcopy should load any file into input folder (landing container), from operations/import folder.

@@ -13,7 +13,6 @@
 	SELECT	'Return Value' = @return_value
 	GO
 
-
 # How to drop an existing table(s)?
 1. Execute sp "master_dropper_rdv"
 	DECLARE	@return_value int
@@ -24,8 +23,9 @@
 # How jobs are constructed?
 1. Jobs are defined is table "wht_jobs" with log table "wht_jobs_log". 
 2. Each job is divided into steps, defined in the "wht_steps" table and log in "wht_job_step_log".
-3. Each step should be entered into the wht_steps table, otherwise no logging occurs.
-4. Each step is a sp. It has to have a strusture like "[sp_list_job_control]".
+3. Each step is a sp. It has to have a structure like "[sp_list_job_control]".
+4. Each step should be entered into the wht_steps table, otherwise no logging occurs.
+5. There should be unique "job & step" entry. If a step should be repeated, then put into another job.
 
 # How to define a new job?
 

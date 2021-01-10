@@ -2,12 +2,14 @@
 # Installation
 ########################
 
+0. git clone from repo
+1. Enter correct main path in the hello.ps1
 1. Configuration
 	Set config files:
 	- global config				: config.json
-	- list of datasets			: config_datasets.xlsx
+	- list of datasets			+ config_datasets.xlsx
 	- list of pipelines 		: config_pipelines.xlsx
-	- config of activities		: config_pipelines_activity.xlsx
+	- config of activities	 	+ config_pipelines_activity.xlsx
 	Global config runs each time via initGlobalConfig script.
 2. Datafactory
 	This is ETL tool, that loads data and metadata files. They need to be uploaded into either of 2 blob containers:

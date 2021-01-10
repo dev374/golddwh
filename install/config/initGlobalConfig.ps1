@@ -1,6 +1,6 @@
 # This should run from any location
 # Global config load within a file or separately:returns variable $c to use in every script
-$global:main = "C:\Dev\golddwh\install"
+$global:main = Join-Path $pwd ""
 $global:c = Get-Content $(Join-Path $main "config\config.json") | ConvertFrom-Json
 
 if(!$c) { 
