@@ -1,11 +1,8 @@
 
 
-/*
-
 	DROP TABLE if exists [dbo].[wht_steps]
 	GO
 
-*/
 
  /* =========================================
    Author:		Miko³aj Paszkowski

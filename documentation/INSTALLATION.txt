@@ -4,22 +4,17 @@
 
 0. git clone from repo
 1. Enter correct main path in the hello.ps1
-1. Configuration
-	Set config files:
+2. Configuration
+	Global config runs each time via initGlobalConfig script. Set config files:
 	- global config				: config.json
 	- list of datasets			+ config_datasets.xlsx
 	- list of pipelines 		: config_pipelines.xlsx
 	- config of activities	 	+ config_pipelines_activity.xlsx
-	Global config runs each time via initGlobalConfig script.
-2. Datafactory
-	This is ETL tool, that loads data and metadata files. They need to be uploaded into either of 2 blob containers:
-	- loaddata
-	- metadata
-	Install in correct order:
-	- linked services 
-	- datasets
-	- pielines
-	- triggers
-	After pipelines installation, allow datafactory to access SQL server.
-3. Logging
-	ETL logging is done via SQL procedure whs_load_log which is defined in config_pipelines_activity.json file
+3. Datafactory
+	This is ETL tool, that loads data and metadata files. It creates 2 blob containers: loaddata, metadata
+	Install in correct order: linked services, datasets, pielines, triggers
+	After pipelines installation, allow datafactory to access SQL server in the portal.
+4. Initialize Datavault
+	Connect to the database. in the \init_datavault execute: create schemas, master_generator, job_control, triggers
+5. Initialize Framework 
+	Start from wht_jobs table. Create whs procedures.

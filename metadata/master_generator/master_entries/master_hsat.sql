@@ -9,7 +9,7 @@ INSERT INTO mtd.master_generator (
 'create_hsat_table',
 'DROP TABLE if exists <schema_name>.<table_name>;'+
 'CREATE TABLE <schema_name>.<table_name> (
-	<hub_table_name>_hk		VARCHAR(32)		NOT NULL, 
+	<hub_table_name>_hk	VARCHAR(32)		NOT NULL, 
 	load_cycle_seq			INT				NOT NULL,
 	record_source			VARCHAR(100)	NOT NULL,
 	insert_dts				DATETIME		NOT NULL DEFAULT GETDATE(),
@@ -19,7 +19,7 @@ INSERT INTO mtd.master_generator (
 )
 ;
 ALTER TABLE <schema_name>.<table_name>
-ADD CONSTRAINT pk_<table_name> PRIMARY KEY (<table_name>_hk)
+ADD CONSTRAINT pk_<table_name> PRIMARY KEY (<hub_table_name>_hk)
 ;
-CREATE UNIQUE INDEX ui_<table_name> ON <schema_name>.<table_name> (<column_ui_list>)
+CREATE UNIQUE INDEX ui_<table_name> ON <schema_name>.<table_name> (load_cycle_seq, <column_ui_list>)
 ;')

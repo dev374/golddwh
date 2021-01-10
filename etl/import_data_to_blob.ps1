@@ -3,7 +3,9 @@
 # Variables
 ########################
 cls
-& c:\Dev\golddwh\install\config\initGlobalConfig.ps1
+cd $(Join-Path $pwd "..\install")
+& .\config\initGlobalConfig.ps1
+
 cd $etlpath
 Write-Host "`n--> Loading data to the cloud storage: $blobendpointmetadata" -ForegroundColor Green
 
@@ -34,6 +36,28 @@ Function ExcelToCsv ($File) {
 	}
 	$Excel.Quit()
 }
+Function StorageKey () {
+    $global:storagekeynr = $c.storage.storagekeynr
+    $storagekeyfile = $(Join-Path $c.path.config "storagekey.txt")
+    if (-not(Test-Path($storagekeyfile))) {
+
+	    echo "OK generating new storage key " 
+	    $keyarray = New-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storagename -KeyName $storagekeynr
+	    $newkey = $($keyarray.Keys | Where-Object {$_.KeyName -eq $storagekeynr}).Value
+	    $newkey > $storagekeyfile
+
+    } else {	
+	    Write-Host "Storage key for $storagename exists"
+	
+	    $keyarray = Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storagename 
+	    $global:newkey = $($keyarray | Where-Object {$_.KeyName -eq $storagekeynr}).Value
+	
+	    $savedkey = Get-Content $storagekeyfile
+	    if ($savedkey -ne $newkey) {
+		    $newkey > $storagekeyfile
+	    }
+    }
+}
 
 ########################
 # Copy with AzCopy
@@ -63,22 +87,23 @@ ForEach ($i in $imparray.Name) {
 $i 
 $flagmetadata
 $flagloaddata
-} #  $piparray.(1)
+} 
 
 # Copy when file has its pipeline, else message 'Pipeline for the file or import files not found'
-	if($flagmetadata -eq 1) {
- 		Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "dat*.csv") $($blobendpointmetadata + $saskey) --recursive=true
+$saskey = Get-Content $(Join-Path $c.path.config "sas_token.txt")
+ 	if($flagmetadata -eq 1) {
+        Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
+       .\azcopy copy $(Join-Path $importpath "met*.csv") $($blobendpointmetadata + $saskey) --recursive=true
     }
 	if($flagloaddata -eq 1) {
- 		Write-Host "`n--> Copying data to the container: loaddata ($blobendpointmetadata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "met*.csv") $($blobendpointloaddata + $saskey) --recursive=true
+        Write-Host "`n--> Copying data to the container: loaddata ($blobendpointmetadata)" -ForegroundColor Blue
+       .\azcopy copy $(Join-Path $importpath "dat*.csv") $($blobendpointloaddata + $saskey) --recursive=true
     }
 
 ########################
 # Archive
 ########################
-$curdate = Get-Date -Format yyyy-MM-dd_hhmm
+$curdate = Get-Date -Format yyyy-MM-dd_hhmmss
 $newfolder = New-Item -Path $(Join-Path $importpath "..\archive\$curdate") -ItemType Directory
 Write-Host "`n--> Archiving data in th folder: $newfolder " -ForegroundColor Green
 Move-Item $(Join-Path $importpath *.*) $newfolder

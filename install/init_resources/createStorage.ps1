@@ -1,8 +1,6 @@
 # Create storage
 Write-Host "`n--> Creating (DEV) storage account" -ForegroundColor Green
 
-$global:storagekeynr = $c.storage.storagekeynr
-
 $sto = Get-AzStorageAccount
 $stoarray = @()
 ForEach ($s in $sto.StorageAccountName) {
@@ -48,8 +46,10 @@ $containers.split() | ForEach {
 		echo "OK. Container $_ exists"
 	} else {
 		$_ | New-AzStorageContainer -Permission Container -Context $context  # create new container
-	}
+	}	
 }
 
-## old way ## $containers.split() | New-AzStorageContainer -Permission Container -Context $context
-
+# Generate SAS tokens
+$sasm = New-AzStorageAccountSASToken -Service Blob,File,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Context $context
+$saskeyfile = $(Join-Path $c.path.config "sas_token.txt")
+$sasm > $saskeyfile

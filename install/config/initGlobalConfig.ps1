@@ -36,6 +36,7 @@ $global:storagename = $c.storage.storagename
 $global:storagekeyfilename = $c.storage.storagekeyfilename
 $global:containers = $c.storage.containers
 $global:storagekey = Get-Content -Path $(Join-Path $path_config $storagekeyfilename) -Encoding utf8
+$global:storagekeynr = $c.storage.storagekeynr
 $global:saskey = $c.storage.saskey
 $global:blobendpointmetadata = $c.storage.blobendpointmetadata
 $global:blobendpointloaddata = $c.storage.blobendpointloaddata

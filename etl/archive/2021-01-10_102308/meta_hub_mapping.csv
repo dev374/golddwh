@@ -1,0 +1,5 @@
+schema_name;table_name;column_name;column_position;data_type;character_maximum_length;numeric_precision;numeric_scale;stg_schema_name;stg_table_name;stg_column_name;active_ind;special_ind;condition;comment
+rdv;hub_account;account_id;1;int;;;;api;g_account;id;1;0;;
+rdv;hub_user;user_id;1;int;;;;api;g_users;id;1;0;;
+rdv;hub_card;card_id;1;int;;;;api;g_card;id;1;0;;
+rdv;hub_address;address_id;1;int;;;;api;g_address;id;1;0;;

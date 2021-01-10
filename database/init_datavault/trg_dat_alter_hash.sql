@@ -5,12 +5,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+DROP TRIGGER if exists [trg_dat_alter_hash]
+GO
 
-
-
-
-
-ALTER TRIGGER [trg_dat_alter_hash] ON DATABASE
+CREATE TRIGGER [trg_dat_alter_hash] ON DATABASE
 	FOR CREATE_TABLE
 AS
 --IF IS_MEMBER ('db_owner') = 0
