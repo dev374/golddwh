@@ -1,7 +1,7 @@
 
 ########################
 # Variables
-########################
+########################    cd C:\dev\golddwh\etl
 cls
 cd $(Join-Path $pwd "..\install")
 & .\config\initGlobalConfig.ps1
@@ -28,7 +28,9 @@ Function ExcelToCsv ($File) {
 		$Excel.displayalerts = $true
 		$Excel.Quit()
 
-        $content = Get-Content $Newfiletemp
+        # UTF8 encoding + ;
+        $content = Get-Content -Raw $Newfiletemp
+        $Newfile = New-Object System.Text.UTF8Encoding $True
         $content = $content -replace ',', ';'
         $content > $Newfile 
         sleep 1
@@ -59,6 +61,55 @@ Function StorageKey () {
     }
 }
 
+Function Convert-CsvInBatch
+{
+	[CmdletBinding()]
+	Param
+	(
+		[Parameter(Mandatory=$true)][String]$Folder
+	)
+	$ErrorActionPreference = 'Stop'
+    $ExcelFiles = Get-ChildItem -Path $Folder -Filter *.xlsx -Recurse
+
+	$excelApp = New-Object -ComObject Excel.Application
+	$excelApp.DisplayAlerts = $false
+
+	$ExcelFiles | ForEach-Object {
+		$workbook = $excelApp.Workbooks.Open($_.FullName)
+		$csvFilePath = $_.FullName -replace "\.xlsx$", ".csv"
+		$workbook.SaveAs($csvFilePath, [Microsoft.Office.Interop.Excel.XlFileFormat]::xlCSV)
+		$workbook.Close()
+	}
+
+	# Release Excel Com Object resource
+	$excelApp.Workbooks.Close()
+	$excelApp.Visible = $true
+	Start-Sleep 1
+	$excelApp.Quit()
+	[System.Runtime.Interopservices.Marshal]::ReleaseComObject($excelApp) | Out-Null
+}
+
+########################
+# Storage key
+########################
+StorageKey
+$context = New-AzStorageContext -StorageAccountName $storagename -StorageAccountKey $newkey
+# Create containers if doesn't exist
+$ec = Get-AzStorageContainer -Context $context
+$containers.split() | ForEach {
+	if($ec.Name -like $_) {
+		echo "OK. Container $_ exists"
+	} else {
+		$_ | New-AzStorageContainer -Permission Container -Context $context  # create new container
+	}	
+}
+
+# Generate SAS tokens
+$sasm = New-AzStorageAccountSASToken -Service Blob,File,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Context $context
+$saskeyfile = $(Join-Path $c.path.config "sas_token.txt")
+$sasm > $saskeyfile
+$saskey = Get-Content $(Join-Path $c.path.config "sas_token.txt")
+
 ########################
 # Copy with AzCopy
 ########################
@@ -73,31 +124,37 @@ ForEach ($p in $getpl) {
 
 $flagloaddata = 0
 $flagmetadata = 0
+$flagdatamodel = 0
 $imparray = Get-ChildItem $importpath -File
 
 ForEach ($i in $imparray.Name) {
 	if($i -like "*.xlsx") {
-        ExcelToCsv -File $i
+        Convert-CsvInBatch $importpath
+   		$i = $i -replace ".xlsx", ".csv"
     }
 
 	if ($piparray.ContainsKey($i)) { 
-		if($i -like 'met*' -or $i -like 'data_model*') { $flagmetadata = 1 }
+		if($i -like 'met*') { $flagmetadata = 1 }
+		if($i -like 'data_model*') { $flagdatamodel = 1 }
 		else { $flagloaddata = 1 }
 	}
 $i 
-$flagmetadata
+$flagdatamodel
 $flagloaddata
 } 
 
 # Copy when file has its pipeline, else message 'Pipeline for the file or import files not found'
-$saskey = Get-Content $(Join-Path $c.path.config "sas_token.txt")
  	if($flagmetadata -eq 1) {
         Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
        .\azcopy copy $(Join-Path $importpath "met*.csv") $($blobendpointmetadata + $saskey) --recursive=true
     }
 	if($flagloaddata -eq 1) {
-        Write-Host "`n--> Copying data to the container: loaddata ($blobendpointmetadata)" -ForegroundColor Blue
+        Write-Host "`n--> Copying data to the container: loaddata ($blobendpointloaddata)" -ForegroundColor Blue
        .\azcopy copy $(Join-Path $importpath "dat*.csv") $($blobendpointloaddata + $saskey) --recursive=true
+    }
+ 	if($flagdatamodel -eq 1) {
+        Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
+       .\azcopy copy $(Join-Path $importpath "data_model*.csv") $($blobendpointmetadata + $saskey) --recursive=true
     }
 
 ########################
@@ -106,5 +163,5 @@ $saskey = Get-Content $(Join-Path $c.path.config "sas_token.txt")
 $curdate = Get-Date -Format yyyy-MM-dd_hhmmss
 $newfolder = New-Item -Path $(Join-Path $importpath "..\archive\$curdate") -ItemType Directory
 Write-Host "`n--> Archiving data in th folder: $newfolder " -ForegroundColor Green
-Move-Item $(Join-Path $importpath *.*) $newfolder
+#Move-Item $(Join-Path $importpath *.*) $newfolder
 sleep 1

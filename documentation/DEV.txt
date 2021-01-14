@@ -2,16 +2,10 @@
 # Project items for development
 ########################
 
-05. Move out saved keys
+data_model
+g_tables
+views
+insert sp selecting views
+generator sp jobs
 
 ++++++++
-+08. Running procedures
-	- sp with dybamic sql convert
-	- log proces
-	- document
-+01. Correct paths: mainpath, config etc. to be ready to install everywhere
-+02. Setup azcopy. Create installation which copies azcopy to operations folder.
-+03. Azcopy should load any file into input folder (landing container), from operations/import folder.
-+04. Install up to datafactory: pipelines and triggers. 
-+06. Generate jsons for datafactory
-
