@@ -163,5 +163,5 @@ $flagloaddata
 $curdate = Get-Date -Format yyyy-MM-dd_hhmmss
 $newfolder = New-Item -Path $(Join-Path $importpath "..\archive\$curdate") -ItemType Directory
 Write-Host "`n--> Archiving data in th folder: $newfolder " -ForegroundColor Green
-#Move-Item $(Join-Path $importpath *.*) $newfolder
+Move-Item $(Join-Path $importpath *.*) $newfolder
 sleep 1

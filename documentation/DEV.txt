@@ -2,6 +2,8 @@
 # Project items for development
 ########################
 
+add truncate table [adf].[meta_hsat_mapping] to all pipelines
+
 data_model
 g_tables
 views

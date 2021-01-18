@@ -4,7 +4,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-DROP PROCEDURE if exists [dbo].[master_dropper_rdv]
+DROP PROCEDURE if exists [mtd].[master_dropper_rdv]
 GO
 
 /* =============================================
@@ -15,7 +15,7 @@ GO
 										
    ========================================== */
 
-CREATE PROCEDURE [dbo].[master_dropper_rdv] (@execute_sql INT = 0)
+CREATE PROCEDURE [mtd].[master_dropper_rdv] (@execute_sql INT = 0)
 AS
 BEGIN
 
