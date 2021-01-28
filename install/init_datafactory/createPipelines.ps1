@@ -67,20 +67,19 @@ Param ([array]$row)
 	$createarray = @();
 	
 	$name = "$($row.inputs)"
-	$dstemplate = $c_blob_file -replace "<datasetname>", "$name"
-	$dstemplate = $dstemplate -replace "<linkedServiceName>", "$($row.linkedServiceName)"
-	$dstemplate = $dstemplate -replace "<type>", "$($row.type)"
-	$dstemplate = $dstemplate -replace "<filenameorfolder>", "$($row.filename)"
-	$dstemplate = $dstemplate -replace "<locationtype>", "$($row.locationtype)"
-	$dstemplate = $dstemplate -replace "<containername>", "$($row.containername)"
+	$dstemplate = $c_blob_file -replace "<datasetname>", "$name.ToLower()"
+	$dstemplate = $dstemplate -replace "<linkedServiceName>", "$($row.linkedServiceName).ToLower()"
+	$dstemplate = $dstemplate -replace "<type>", "$($row.type).ToLower()"
+	$dstemplate = $dstemplate -replace "<filenameorfolder>", "$($row.filename).ToLower()"
+	$dstemplate = $dstemplate -replace "<locationtype>", "$($row.locationtype).ToLower()"
+	$dstemplate = $dstemplate -replace "<containername>", "$($row.containername).ToLower()"
 	$dstemplate = $dstemplate -replace "<flagfirstRowAsHeader>", "$($row.flagfirstRowAsHeader)"
 
 	$json = $(Join-Path $path_datasets "$name.json")
 	$createarray += $json
 	$dstemplate > $json
 
-	Write-Host "Dataset file: $name --> OK new JSON definition created in `
-							  $json"
+	Write-Host "Dataset file: $name --> OK new JSON definition created in $json"
     return $json
 }	
 
@@ -117,21 +116,21 @@ Param ([string]$jsonfile,
 # Create templates for each
 $joinedObject = Foreach ($row in $pipelines) 
 {
-	$name = "$($row.pipelinename)"		
+	$name = $($row.pipelinename).ToLower()		
 	$pl_template = "$p_start $p_logstart , $p_copydata , $p_archive , $p_logfinish $p_ending"	
 		
 	# Prepare tamplate in templates		
-	$pl_template = $pl_template -replace "<filename>", "$($row.filename)"
+	$pl_template = $pl_template -replace "<filename>", $($row.filename).ToLower()
 	$pl_template = $pl_template -replace "<pipelinename>", "$name"
-	$pl_template = $pl_template -replace "<sourceloaddatablob>", "$($row.containername)"
-	$pl_template = $pl_template -replace "<copydatainputs>", "$($row.inputs)"
-	$pl_template = $pl_template -replace "<copydataoutputs>", "$($row.outputs)"
-	$pl_template = $pl_template -replace "<targetarchiveblob>", "$($activities.archive.targetarchiveblob)"
+	$pl_template = $pl_template -replace "<sourceloaddatablob>", $($row.containername).ToLower()
+	$pl_template = $pl_template -replace "<copydatainputs>", $($row.inputs).ToLower()
+	$pl_template = $pl_template -replace "<copydataoutputs>", $($row.outputs).ToLower()
+	$pl_template = $pl_template -replace "<targetarchiveblob>", $($activities.archive.targetarchiveblob).ToLower()
 	$pl_template = $pl_template -replace "<statusstart>", "$($activities.logging.statusstart)"
 	$pl_template = $pl_template -replace "<statusfinish>", "$($activities.logging.statusfinish)"		
-	$pl_template = $pl_template -replace "<archiveinputs>", "$($row.inputs)"
-	$pl_template = $pl_template -replace "<archiveoutputs>", "$($activities.archive.dataset)"
-	$pl_template = $pl_template -replace "<loglinkedservicesql>", "$linkedservicesql"
+	$pl_template = $pl_template -replace "<archiveinputs>", $($row.inputs).ToLower()
+	$pl_template = $pl_template -replace "<archiveoutputs>", $($activities.archive.dataset).ToLower()
+	$pl_template = $pl_template -replace "<loglinkedservicesql>", $linkedservicesql.ToLower()
 	$pl_template = $pl_template -replace "<logstoredprocedurename>", "$($activities.logging.logstoredprocedurename)"
 	$pl_template = $pl_template -replace "<logloadinderrordpendendon>", "$name"
 	$pl_template = $pl_template -replace "                 ", "`n"

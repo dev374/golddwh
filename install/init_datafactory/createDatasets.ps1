@@ -34,7 +34,7 @@ Param ([array]$row)
 	# SQL type
 	if ($row.typeid -eq 1) { 
 		$name = "$($row.datasetname)"
-		$dstemplate = $c_sql -replace "<datasetname>", "$($row.datasetname)"
+		$dstemplate = $c_sql -replace "<datasetname>", "$($row.datasetname.Lower)"
 		$dstemplate = $dstemplate -replace "<linkedServiceName>", "$($row.linkedServiceName)"
 		$dstemplate = $dstemplate -replace "<type>", "$($row.type)"
 		$dstemplate = $dstemplate -replace "<schema>", "$($row.schema)"

@@ -63,17 +63,17 @@ Param ([array]$row,
 # v.1.0 initial, v.1.1 lilmited to file json (based on Create-DatasetJson)
 
 # Create corresponding triggers	
-	$trg_dataset = $pipelines | Where-Object {$_.PipelineName -eq "$($row.pipelinename)"}
-	$trg_blobpath = "/$($trg_dataset.containername)/blobs/$($row.pipelinename)"
-	$trg_name = "trg_$($row.pipelinename)"
-	$json_tr = $(Join-Path $path_triggers "$trg_name.json") #?
+	$trg_dataset = $pipelines | Where-Object {$_.PipelineName -eq "$($row.pipelinename)".ToLower()}
+	$trg_blobpath = "/$($trg_dataset.containername)/blobs/$($row.pipelinename)".ToLower()
+	$trg_name = "trg_$($row.pipelinename)".ToLower()
+	$json_tr = $(Join-Path $path_triggers "$trg_name.json") 
 
 	$tr_template = "$t_datafile"
 	$tr_template = $tr_template -replace "                 ", "`n"
 	$tr_template = $tr_template -replace "          ", "`n"
 	$tr_template = $tr_template -replace "		", "`n"
 	$tr_template = $tr_template -replace "<triggername>", "$trg_name"
-	$tr_template = $tr_template -replace "<pipelinename>", "$($row.pipelinename)"
+	$tr_template = $tr_template -replace "<pipelinename>", "$($row.pipelinename)".ToLower()
 	$tr_template = $tr_template -replace "<blobPathBeginsWith>", "$trg_blobpath"
 	$tr_template = $tr_template -replace "<tenantid>", "$subscriptionid"
 	$tr_template = $tr_template -replace "<resourcegroup>", "$resourcegroupname"
