@@ -7,3 +7,5 @@ pipelineid;pipelinename;filename;inputs;outputs;containername;createdataset;link
 6;meta_ref_mapping;meta_ref_mapping.csv;src_meta_ref_mapping;dst_sql_in;metadata;6;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
 7;data_model_mapping;data_model_mapping.csv;src_data_model_mapping;dst_sql_in;metadata;7;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
 8;meta_lsat_status_mapping;meta_lsat_status_mapping.csv;src_meta_lsat_status_mapping;dst_sql_in;metadata;8;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
+9;dat_Kunde;dat_Kunde.csv;src_dat_kunde;dst_sql_in;loaddata;9;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE
+10;dat_Nach_K;dat_Nach_K.csv;src_dat_nach_k;dst_sql_in;loaddata;10;conn_blobstorage;DelimitedText;AzureBlobStorageLocation;TRUE

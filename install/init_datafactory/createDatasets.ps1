@@ -6,9 +6,8 @@ $ds_blob_folder		= $c.datasets.template_blob_folder
 $ds_blob_file		= $c.datasets.template_blob_file
 $ds_sql				= $c.datasets.template_sql
 
-$path_datasets 		= $c.path.datasets
-$path_templates 	= $c.path.adftemplatesds
-$path_config 		= $c.path.config
+$path_datasets 		= $(Join-Path $main $c.path.datasets)
+$path_templates 	= $(Join-Path $main $c.path.adftemplatesds)
 $global:datasets 	= Get-Content -Path $(Join-Path $path_config $ds_config) | ConvertFrom-Csv -Delimiter ';'
 $global:c_blob_fold = Get-Content -Path $(Join-Path $path_templates $ds_blob_folder) 
 $global:c_blob_file = Get-Content -Path $(Join-Path $path_templates $ds_blob_file) 
@@ -120,6 +119,6 @@ $filelist = Get-ChildItem -Path $path_datasets -File | Where-Object { ($_.Name -
 
 $generateObject = ForEach ($row in $filelist) 
 {
-    $d = Generate-Dataset-FromJson $(Join-Path $path_datasets $row.Name) $($row.Name) -Overwrite 0
+    $d = Generate-Dataset-FromJson $(Join-Path $path_datasets $row.Name) $($row.Name) -Overwrite 1
 }
 

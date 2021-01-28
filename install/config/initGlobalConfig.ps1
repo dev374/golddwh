@@ -1,7 +1,7 @@
 # This should run from any location
 # Global config load within a file or separately:returns variable $c to use in every script
-$global:main = Join-Path $pwd ""
-$global:c = Get-Content $(Join-Path $main "config\config.json") | ConvertFrom-Json
+$global:main = Get-Content -Path ".\mainpath.env"
+$global:c = Get-Content $(Join-Path $main "install\config\config.json") | ConvertFrom-Json
 
 if(!$c) { 
 	echo ' Empty config. Load config first'
@@ -19,9 +19,11 @@ $global:location = $c.server.location
 $global:serverName = $c.server.servername
 $global:databaseName = $c.database.databaseName
 $global:objective = $c.database.objective
-$global:path_config = $c.path.config
-$global:importpath = $c.path.import
-$global:etlpath = $c.path.etl
+
+$global:logfilepath = $(Join-Path $main $c.path.logfile)
+$global:path_config = $(Join-Path $main $c.path.config)
+$global:importpath = $(Join-Path $main $c.path.import)
+$global:etlpath = $(Join-Path $main $c.path.etl)
 
 $global:startIp = $c.server.startIp
 $global:endIp = $c.server.endip
@@ -41,7 +43,6 @@ $global:saskey = $c.storage.saskey
 $global:blobendpointmetadata = $c.storage.blobendpointmetadata
 $global:blobendpointloaddata = $c.storage.blobendpointloaddata
 
-$global:loginstallfile = $c.path.loginstallfile
 $global:temploc = $c.general.temploc
 
 <# For future use

@@ -6,43 +6,43 @@
 	},
 
 	"storage": {
-		"storagename": "demostordwhgold2",
+		"storagename": "shallstordwh",
 		"storagekeynr": "key1",
 		"storagekeyfilename": "storagekey.txt",
 		"containers": "loaddata archive metadata",
-		"saskey": "?<todo>",
-		"blobendpointmetadata": "https://demostordwhgold2.blob.core.windows.net/metadata/",
-		"blobendpointloaddata": "https://demostordwhgold2.blob.core.windows.net/loaddata/"		
+		"saskey": "<todo>",
+		"blobendpointmetadata": "https://shallstordwh.blob.core.windows.net/metadata/",
+		"blobendpointloaddata": "https://shallstordwh.blob.core.windows.net/loaddata/"		
 	},
 	"server": {
-		"resourcegroupname": "demoresourcegroupdwh2",
+		"resourcegroupname": "shall_rg",
 		"location": "West Europe",
-		"servername": "demosqlsrvdwh2",
+		"servername": "sshsqlsrv",
 		"startip": "188.122.18.4",
 		"endip": "188.122.18.255"
 	},
 	"database": {
-		"databaseName": "demodbdwh2",
+		"databaseName": "shalldbdwh",
 		"adminLogin": "etlusr",
 		"adminPass": "P@ssword123",
 		"objective": "Basic"
 	},
 	"path": {
-		"logfile": "C:\\Dev\\golddwh\\documentation\\logs\\loginstall_",
-		"install": "C:\\Dev\\golddwh\\install\\",
-		"import": "C:\\Dev\\golddwh\\etl\\import",
-		"etl": "C:\\Dev\\golddwh\\etl",
-		"config": "C:\\Dev\\golddwh\\install\\config\\",
-		"adflinkedservices": "C:\\Dev\\golddwh\\install\\init_datafactory\\linked_services\\",
-		"adftemplatesds": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\ds\\",
-		"adftemplatespl": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\pl\\",
-		"adftemplatestr": "C:\\Dev\\golddwh\\install\\init_datafactory\\templates\\tr\\",
-		"datasets": "C:\\Dev\\golddwh\\install\\init_datafactory\\datasets\\",
-		"pipelines": "C:\\Dev\\golddwh\\install\\init_datafactory\\pipelines\\",
-		"triggers": "C:\\Dev\\golddwh\\install\\init_datafactory\\triggers\\"
+		"logfile": "documentation\\logs\\loginstall_",
+		"install": "install\\",
+		"import": "etl\\import",
+		"etl": "etl",
+		"config": "install\\config\\",
+		"adflinkedservices": "install\\init_datafactory\\linked_services\\",
+		"adftemplatesds": "install\\init_datafactory\\templates\\ds\\",
+		"adftemplatespl": "install\\init_datafactory\\templates\\pl\\",
+		"adftemplatestr": "install\\init_datafactory\\templates\\tr\\",
+		"datasets": "install\\init_datafactory\\datasets\\",
+		"pipelines": "install\\init_datafactory\\pipelines\\",
+		"triggers": "install\\init_datafactory\\triggers\\"
 	},
 	"datafactory": {
-		"datafactoryname": "demodfdwh123",
+		"datafactoryname": "adfshall",
 		"linkedserviceblob": "conn_blobstorage",
 		"linkedservicesql": "conn_sqldwh",
 		"linkedservicejsonext": ".json"

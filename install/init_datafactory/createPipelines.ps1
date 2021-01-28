@@ -15,13 +15,13 @@ $ds_blob_file		= $c.datasets.template_blob_file
 $ds_config 			= $c.datasets.ds_config
 $linkedservicesql	= $c.datafactory.linkedservicesql
 
-$path_pipelines 	= $c.path.pipelines
-$path_datasets 		= $c.path.datasets
-$path_triggers 		= $c.path.triggers
-$path_templates 	= $c.path.adftemplatespl
-$path_templates_ds 	= $c.path.adftemplatesds
-$path_templates_tr  = $c.path.adftemplatestr
-$path_config 		= $c.path.config
+$path_pipelines 	= $(Join-Path $main $c.path.pipelines)
+$path_datasets 		= $(Join-Path $main $c.path.datasets)
+$path_triggers 		= $(Join-Path $main $c.path.triggers)
+$path_templates 	= $(Join-Path $main $c.path.adftemplatespl)
+$path_templates_ds 	= $(Join-Path $main $c.path.adftemplatesds)
+$path_templates_tr  = $(Join-Path $main $c.path.adftemplatestr)
+$path_config 		= $(Join-Path $main $c.path.config)
 
 $global:activities  = Get-Content $(Join-Path $path_config $pl_act_config) | ConvertFrom-Json
 $global:pipelines 	= Get-Content -Path $(Join-Path $path_config $pl_config) | ConvertFrom-Csv -Delimiter ';'

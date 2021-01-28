@@ -1,6 +1,6 @@
 
 # Variables - set the resource group name, location, servername, database and allowed IP range
-$pathadflinkedservices = $c.path.adflinkedservices
+$pathadflinkedservices = $(Join-Path $main $c.path.adflinkedservices)
 $linkedserviceblob = $c.datafactory.linkedserviceblob
 $linkedservicesql = $c.datafactory.linkedservicesql
 $linkedservicejsonext = $c.datafactory.linkedservicejsonext
@@ -59,7 +59,7 @@ ForEach ($l in $getls.Name) {
 	$file_blob = Join-Path $pathadflinkedservices $($linkedserviceblob+$linkedservicejsonext)
 	$ls_blob_template > $file_blob
 
-	$a = Create-LinkedService $linkedserviceblob $file_blob 1
+	$a = Create-LinkedService $linkedserviceblob $file_blob 0
 	echo $a
 
 # Generate sql ls
@@ -81,9 +81,9 @@ ForEach ($l in $getls.Name) {
 	$ls_sql_template = $ls_sql_template -replace "<adminLogin>", $adminLogin
 	$ls_sql_template = $ls_sql_template -replace "<adminPass>", $adminPass
 
+# Create LS sql
 	$file_sql = Join-Path $pathadflinkedservices $($linkedservicesql+$linkedservicejsonext)
 	$ls_sql_template > $file_sql
-
-
-	$b = Create-LinkedService $linkedservicesql $file_sql 1
+	$b = Create-LinkedService $linkedservicesql $file_sql 0
 	echo $b
+	

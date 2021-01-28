@@ -2,7 +2,7 @@
 
 Write-Host "`n--> Creating (DEV) AzCopy" -ForegroundColor Green
 
-$etlloc = $c.path.etl
+$etlloc = $(Join-Path $main $c.path.etl)
 $azdest = $temploc + "\azcopy.zip"
 
 if (-not(Test-Path($(Join-Path $etlloc "azcopy.exe")))) {

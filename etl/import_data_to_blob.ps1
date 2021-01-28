@@ -1,10 +1,11 @@
 
 ########################
 # Variables
-########################    cd C:\dev\golddwh\etl
+########################
 cls
-cd $(Join-Path $pwd "..\install")
-& .\config\initGlobalConfig.ps1
+
+$global:main = Get-Content -Path "mainpath.env"
+& $(Join-Path $main "install\config\initGlobalConfig.ps1")
 
 cd $etlpath
 Write-Host "`n--> Loading data to the cloud storage: $blobendpointmetadata" -ForegroundColor Green
@@ -40,14 +41,14 @@ Function ExcelToCsv ($File) {
 }
 Function StorageKey () {
     $global:storagekeynr = $c.storage.storagekeynr
-    $storagekeyfile = $(Join-Path $c.path.config "storagekey.txt")
+    $global:storagekeyfile = $(Join-Path $path_config "storagekey.txt")
     if (-not(Test-Path($storagekeyfile))) {
 
 	    echo "OK generating new storage key " 
 	    $keyarray = New-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storagename -KeyName $storagekeynr
-	    $newkey = $($keyarray.Keys | Where-Object {$_.KeyName -eq $storagekeynr}).Value
+	    $global:newkey = $($keyarray.Keys | Where-Object {$_.KeyName -eq $storagekeynr}).Value
 	    $newkey > $storagekeyfile
-
+    
     } else {	
 	    Write-Host "Storage key for $storagename exists"
 	
@@ -57,7 +58,8 @@ Function StorageKey () {
 	    $savedkey = Get-Content $storagekeyfile
 	    if ($savedkey -ne $newkey) {
 		    $newkey > $storagekeyfile
-	    }
+	    } 
+    echo "Newkey $newkey"
     }
 }
 
@@ -105,10 +107,12 @@ $containers.split() | ForEach {
 }
 
 # Generate SAS tokens
-$sasm = New-AzStorageAccountSASToken -Service Blob,File,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Context $context
-$saskeyfile = $(Join-Path $c.path.config "sas_token.txt")
-$sasm > $saskeyfile
-$saskey = Get-Content $(Join-Path $c.path.config "sas_token.txt")
+
+#$sasm = New-AzStorageBlobSASToken -Container "ContainerName" -Blob "BlobName" -Permission rwd
+$saskeyfile = $(Join-Path $path_config "sas_token.txt")
+$saskey = New-AzStorageAccountSASToken -Service Blob,File,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Context $context
+$saskey > $saskeyfile
+$saskey 
 
 ########################
 # Copy with AzCopy
@@ -138,10 +142,8 @@ ForEach ($i in $imparray.Name) {
 		if($i -like 'data_model*') { $flagdatamodel = 1 }
 		else { $flagloaddata = 1 }
 	}
+# Checks
 $i 
-$flagdatamodel
-$flagloaddata
-} 
 
 # Copy when file has its pipeline, else message 'Pipeline for the file or import files not found'
  	if($flagmetadata -eq 1) {
@@ -156,6 +158,7 @@ $flagloaddata
         Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
        .\azcopy copy $(Join-Path $importpath "data_model*.csv") $($blobendpointmetadata + $saskey) --recursive=true
     }
+} 
 
 ########################
 # Archive

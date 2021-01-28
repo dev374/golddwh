@@ -16,7 +16,7 @@ if($stoarray -like $storagename) {
 	$storage = New-AzStorageAccount -ResourceGroupName $resourceGroupName -AccountName $storagename -Location $location -SkuName Standard_LRS -Kind StorageV2 -AssignIdentity
 }
 	
-$storagekeyfile = $(Join-Path $c.path.config "storagekey.txt")
+$storagekeyfile = $(Join-Path $path_config "storagekey.txt")
 if (-not(Test-Path($storagekeyfile))) {
 
 	echo "OK generating new storage key " 
@@ -51,5 +51,5 @@ $containers.split() | ForEach {
 
 # Generate SAS tokens
 $sasm = New-AzStorageAccountSASToken -Service Blob,File,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Context $context
-$saskeyfile = $(Join-Path $c.path.config "sas_token.txt")
+$saskeyfile = $(Join-Path $path_config "sas_token.txt")
 $sasm > $saskeyfile
