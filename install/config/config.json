@@ -51,7 +51,8 @@
 		"ds_config": "config_datasets.csv",
 		"template_blob_folder": "template_blob_folder.txt",
 		"template_blob_file": "template_blob_file.txt",
-		"template_sql": "template_sql.txt"
+		"template_sql": "template_sql.txt",
+		"overwrite": 0
 	},
 	"pipelines": {
 		"pl_config": "config_pipelines.csv",
@@ -62,7 +63,8 @@
 		"template_act_log_finish": "log_loading_finish.txt",
 		"template_act_log_error": "log_loading_error.txt",
 		"template_start": "pl_begin.txt",
-		"template_ending": "pl_ending.txt"
+		"template_ending": "pl_ending.txt",
+		"overwrite": 0
 	},
 	"triggers": {
 		"template_trg_datafile": "trg_data_file.txt",

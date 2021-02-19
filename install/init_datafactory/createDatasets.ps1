@@ -5,6 +5,7 @@ $ds_config 			= $c.datasets.ds_config
 $ds_blob_folder		= $c.datasets.template_blob_folder
 $ds_blob_file		= $c.datasets.template_blob_file
 $ds_sql				= $c.datasets.template_sql
+$ds_overwrite 		= $c.datasets.overwrite
 
 $path_datasets 		= $(Join-Path $main $c.path.datasets)
 $path_templates 	= $(Join-Path $main $c.path.adftemplatesds)
@@ -119,6 +120,6 @@ $filelist = Get-ChildItem -Path $path_datasets -File | Where-Object { ($_.Name -
 
 $generateObject = ForEach ($row in $filelist) 
 {
-    $d = Generate-Dataset-FromJson $(Join-Path $path_datasets $row.Name) $($row.Name) -Overwrite 1
+    $d = Generate-Dataset-FromJson $(Join-Path $path_datasets $row.Name) $($row.Name) -Overwrite $ds_overwrite
 }
 

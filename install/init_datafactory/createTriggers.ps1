@@ -10,6 +10,7 @@ $pl_act_log_finish	= $c.pipelines.template_act_log_finish
 $pl_act_log_error	= $c.pipelines.template_act_log_error
 $pl_tem_start		= $c.pipelines.template_start
 $pl_tem_ending		= $c.pipelines.template_ending
+$pl_overwrite 		= $c.pipelines.overwrite
 $tr_tem_datafile	= $c.triggers.template_trg_datafile
 $ds_blob_file		= $c.datasets.template_blob_file
 $ds_config 			= $c.datasets.ds_config

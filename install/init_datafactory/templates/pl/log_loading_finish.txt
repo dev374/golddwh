@@ -3,7 +3,7 @@
                 "type": "SqlServerStoredProcedure",
                 "dependsOn": [
                     {
-                        "activity": "Copy data SQL",
+                        "activity": "Delete1",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

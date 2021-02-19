@@ -148,15 +148,15 @@ $i
 # Copy when file has its pipeline, else message 'Pipeline for the file or import files not found'
  	if($flagmetadata -eq 1) {
         Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "met*.csv") $($blobendpointmetadata + $saskey) --recursive=true
+       .\azcopy copy $(Join-Path $importpath "met*.csv").ToLower() $($blobendpointmetadata + $saskey) --recursive=true
     }
 	if($flagloaddata -eq 1) {
         Write-Host "`n--> Copying data to the container: loaddata ($blobendpointloaddata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "dat*.csv") $($blobendpointloaddata + $saskey) --recursive=true
+       .\azcopy copy $(Join-Path $importpath "dat*.csv").ToLower() $($blobendpointloaddata + $saskey) --recursive=true
     }
  	if($flagdatamodel -eq 1) {
         Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "data_model*.csv") $($blobendpointmetadata + $saskey) --recursive=true
+       .\azcopy copy $(Join-Path $importpath "data_model*.csv").ToLower() $($blobendpointmetadata + $saskey) --recursive=true
     }
 } 
 

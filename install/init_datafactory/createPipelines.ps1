@@ -10,6 +10,7 @@ $pl_act_log_finish	= $c.pipelines.template_act_log_finish
 $pl_act_log_error	= $c.pipelines.template_act_log_error
 $pl_tem_start		= $c.pipelines.template_start
 $pl_tem_ending		= $c.pipelines.template_ending
+$pl_overwrite 		= $c.pipelines.overwrite
 $tr_tem_datafile	= $c.triggers.template_trg_datafile
 $ds_blob_file		= $c.datasets.template_blob_file
 $ds_config 			= $c.datasets.ds_config
@@ -133,6 +134,7 @@ $joinedObject = Foreach ($row in $pipelines)
 	$pl_template = $pl_template -replace "<loglinkedservicesql>", $linkedservicesql.ToLower()
 	$pl_template = $pl_template -replace "<logstoredprocedurename>", "$($activities.logging.logstoredprocedurename)"
 	$pl_template = $pl_template -replace "<logloadinderrordpendendon>", "$name"
+	$pl_template = $pl_template -replace "<linkedServiceName>", $linkedserviceblob
 	$pl_template = $pl_template -replace "                 ", "`n"
 
 	# Generate pipeline & dataset definition
@@ -144,7 +146,7 @@ $joinedObject = Foreach ($row in $pipelines)
 		
 	# Generate datasets
 	$j = Create-DatasetJson-ForPipeline $row
-    $d = Generate-Dataset-FromJson $json_ds $($row.inputs) -Overwrite 1
+    $d = Generate-Dataset-FromJson $json_ds $($row.inputs) -Overwrite $pl_overwrite
 
 	# Create pipeline
 	if($plarray -eq $name -and $overwrite) {

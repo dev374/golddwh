@@ -5,9 +5,9 @@
 # How to create new ETL data load?
 1. You need to define Datasets and Pipelines in \config folder in pipelines and datasets .xlsx file 
 2. Typeid 1 is SQL, 2 Blobfile, 3 Blobfolder
-3. Install new interafaces (dst, src, pip, trg) with install 
+3. Install new interafaces (dst, src, pip, trg) with "install" 
 4. Create and edit data_model_mapping (sources) 
-5. Copy it as .xlsx or .csv 
+5. Copy it as .xlsx or .csv and "run_import"
 6. Make sure Firewall settings are ok! = 
 run_import
  
