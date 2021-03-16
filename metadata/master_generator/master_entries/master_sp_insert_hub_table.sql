@@ -22,14 +22,14 @@ INSERT INTO mtd.master_generator (
 ) VALUES (
 'sp_insert_hub_table',
 '
-/* =============================================
+/* === sp_insert_<table_name> ===
    Author:		Generic by Mikołaj Paszkowski
-   Create date: 2021-01-15
-   Version:     2021-01-15	v.1.0	Initial version
-
-   ========================================== */
+   Version:     2021-02-22	v.1.1	hk updates
+				2021-01-15	v.1.0	Initial version
+' + CHAR(13)+CHAR(10) + '
+*/
 CREATE PROCEDURE [dbo].[sp_insert_<table_name>]
-				( @run_id NVARCHAR(8) = ''12345678'' )
+				( @run_id NVARCHAR(8) = NULL )' + CHAR(13)+CHAR(10) + '
 AS
 BEGIN TRY
 	SET NOCOUNT ON;
@@ -49,45 +49,40 @@ BEGIN TRY
 		 @end_dttm				DATETIME		= NULL,
 		 @duration				INT				= NULL,
 		 @row_cnt				INT				= 0,
-		 @step_uid				UNIQUEIDENTIFIER = NEWID();
-	/* -- ============================================= */		 
-	SELECT @run_id = COALESCE(@run_id, convert(varchar,@@SPID))
+		 @step_uid_out			UNIQUEIDENTIFIER = NULL;
+	SELECT @run_id = COALESCE(@run_id, COALESCE(@run_id, SUBSTRING(CONVERT(varchar(max), NEWID()),0,8)))
 	SELECT @step_name = OBJECT_NAME(@@PROCID)	
-	/* -- =============================================
-	-- Start step: Initialize job step */
-	EXEC @step_uid = dbo.whs_jobstep_init @step_name, @run_id, @step_uid = @step_uid
-	/* -- ============================================= */
-	PRINT N''sp step uid: '' + convert(nvarchar(max), @step_uid) + '' sp_rdv_insert_<table_name>''
+	/* -- Initialize job step */
+	EXEC dbo.whs_jobstep_init @step_name, @run_id, @step_uid = @step_uid_out OUTPUT
 
+	PRINT N''sp step uid: '' + convert(nvarchar(max), @step_uid_out) + '' sp_rdv_insert_<table_name>''
+	PRINT N''run id: '' + convert(nvarchar(max), @run_id)
+
+' + CHAR(13)+CHAR(10) + '
 	INSERT INTO <schema_name>.<table_name> 
 		(<table_name>_hk, load_cycle_seq, record_source, insert_dts, changed_by, 
-		<column_name>)
+		<column_name>)' + CHAR(13)+CHAR(10) + '
 	SELECT 
-		COALESCE(g.hash, CONVERT(char(32), HASHBYTES(''md5'',([table_name])), 2)),
+		COALESCE(CONVERT(char(32), HASHBYTES(''md5'',(CONVERT(NVARCHAR(MAX), g.<stg_column_name>))), 2), 
+				 ''11111111111111111111111111111111'') as <table_name>_hk,
 		1,
 		''Step name '' + @step_name + '''',
 		@start_dttm,
 		@run_id,
-		g.<column_name> 
+		g.<stg_column_name> 
 	FROM <stg_schema_name>.<stg_table_name> g
-	INNER JOIN adf.meta_hub_mapping t
-	  ON t.table_name = ''<table_name>''
-	  AND t.active_ind = 1
 	LEFT JOIN <schema_name>.<table_name> u 
-	  ON COALESCE(g.hash, CONVERT(char(32), HASHBYTES(''md5'',([table_name])), 2)) = u.<table_name>_hk
-	WHERE u.<table_name>_hk IS NULL
-
+	  ON COALESCE(CONVERT(char(32), HASHBYTES(''md5'',(CONVERT(NVARCHAR(MAX), g.<stg_column_name>))), 2), 
+				 ''11111111111111111111111111111111'') = u.<table_name>_hk /* check existing hk */
+	WHERE u.<table_name>_hk IS NULL 
 	SET @row_cnt = @@ROWCOUNT
-	/* -- ============================================= 
-	-- End step: Handle output */
-	PRINT ''sp finish. count: @row_cnt''
-	EXEC dbo.whs_jobstep_finish @step_name, @run_id, @start_dttm, @row_cnt, @step_uid
-	RETURN 0;
-	/* -- ============================================= */
 
+	-- End step: Handle output */
+	PRINT ''sp finish. count: '' + CAST(@row_cnt as VARCHAR(100))
+	EXEC dbo.whs_jobstep_finish @step_name, @run_id, @start_dttm, @row_cnt, @step_uid_out
+	RETURN 0;
 END TRY
 BEGIN CATCH
-	/* End step: Update steps  Handle ERROR  */
 	PRINT N''sp catch''
 
 	SELECT @end_dttm = GETDATE()
@@ -110,7 +105,7 @@ BEGIN CATCH
 		    comment			= @result_message,
 		    end_dttm		= @end_dttm,
 		    duration		= @duration,
-		    result			= 1,
+		    result			= -1,
 			[error_number]	= @Error_NUMBER,
 			[error_msg]		= @Error_MSG,
 			[error_line]	= @Error_LINE,
@@ -119,9 +114,9 @@ BEGIN CATCH
 			[error_state]	= @Error_STATE,
 			[error_count]	= @Error_COUNT 
 	  FROM dbo.wht_steps_log t
-	 WHERE t.id = @step_uid 
+	 WHERE t.id = @step_uid_out 
 	
-	PRINT convert(varchar(100), @Error_MSG)
+	PRINT convert(varchar(4000), @Error_MSG)
 
-END CATCH;
+END CATCH
 ')

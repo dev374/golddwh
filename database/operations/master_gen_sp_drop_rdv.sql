@@ -1,5 +1,10 @@
-DROP PROCEDURE if exists [mtd].[master_gen_sp_drop_rdv]
+/****** Object:  StoredProcedure [mtd].[master_gen_sp_drop_rdv]    Script Date: 16.03.2021 12:16:53 ******/
+SET ANSI_NULLS ON
 GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 
 /* =============================================
 	Synopsis:	Complete dropper for insert procedures RDV --> jobs
@@ -133,10 +138,12 @@ UNION ALL
 		SELECT @sql = command from @sql_table where id = @cnt;
 		--PRINT @sql
 		IF @execute_sql = 1 
-			EXEC sp_executesql @sql;
+			EXEC dbo.sp_executesql @sql;
 		SET @cnt -= 1;
 	END;
 	
 	SELECT * from @sql_table;
 
 END;
+GO
+

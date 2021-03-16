@@ -1,5 +1,10 @@
-DROP PROCEDURE if exists [mtd].[master_gen_sp_inserts_rdv]
+/****** Object:  StoredProcedure [mtd].[master_gen_sp_inserts_rdv]    Script Date: 16.03.2021 12:15:58 ******/
+SET ANSI_NULLS ON
 GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 
 /* =============================================
 	Synopsis:	Complete generator for insert procedures RDV --> jobs
@@ -189,10 +194,12 @@ UNION ALL
 		SELECT @sql = command FROM @sql_table where id = @cnt;
 		PRINT @sql
 		IF @execute_sql = 1 
-			EXEC sp_executesql @sql;
+			EXEC dbo.sp_executesql @sql;
 		SET @cnt -= 1;
 	END;
 	
 	SELECT * FROM @sql_table;
 
 END;
+GO
+

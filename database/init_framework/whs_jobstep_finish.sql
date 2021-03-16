@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [dbo].[whs_jobstep_finish]    Script Date: 02.03.2020 12:58:50 ******/
+/****** Object:  StoredProcedure [dbo].[whs_jobstep_finish]    Script Date: 23.02.2021 09:58:30 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -6,14 +6,14 @@ GO
 
 DROP PROCEDURE if exists [dbo].[whs_jobstep_finish]
 GO
-
 /* =============================================
    Author:		Miko³aj Paszkowski
    Create date: 2020-02-20
    Verison:     2020-03-02	v.1.0		Initial version
 				2020-03-09	v.1.1		Added @step_uid
+				2021-02-23	v.1.2		Identyfying and updating only by @step_uid
    ========================================== */
-CREATE PROCEDURE [dbo].[whs_jobstep_finish]
+ALTER PROCEDURE [dbo].[whs_jobstep_finish]
 				( @step_name VARCHAR(100) = NULL,
 				  @run_id NVARCHAR(8) = NULL,
 				  @start_dttm DATETIME = NULL,
@@ -39,8 +39,10 @@ BEGIN TRY
 
 	-- =============================================
 	-- End step: Finish
-	SELECT @end_dttm = GETDATE()
-		  ,@duration = DATEDIFF(second, @start_dttm, @end_dttm)
+	SELECT @row_cnt = COALESCE(@row_cnt, 0)
+		  ,@end_dttm = GETDATE()
+		  ,@duration = COALESCE(DATEDIFF(second, @start_dttm, @end_dttm), 0);
+
 	SELECT @result_message = 'Step: ' + @step_name + ' completed in ' + convert(varchar,@duration) + ' second(s). Rows merged: ' + convert(varchar, @row_cnt) + ' ';
 
 	UPDATE t
@@ -52,8 +54,8 @@ BEGIN TRY
 	FROM dbo.wht_steps_log t 
 	WHERE 
 		t.id = COALESCE(@step_uid, t.id)
-	AND	run_id = @run_id 
-	AND t.step_name = @step_name
+	OR (run_id = @run_id 
+		AND t.step_name = @step_name)
 	
 
 	RETURN 0;

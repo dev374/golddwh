@@ -4,19 +4,22 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-DROP PROCEDURE if exists [mtd].[master_generate_rdv]
+DROP PROCEDURE if exists [mtd].[master_create_all_rdv]
 GO
 
 /* =============================================
-	Synopsis:	RDV complete generator from "generate_<xxx>" scripts
+	Synopsis:	RDV complete table generator from "create_<xxx>" scripts
 
 	Author:		Mikołaj Paszkowski
 	Created: 	2020-12-08
-	Verison:    2020-12-08	v.1.0		Initial version 
+	Verison:    2021-02-22	v.1.1		Mod create tables 
+				2020-12-08	v.1.0		Initial version 
+	
+	NEED UPDATES for lsat, pit, ... etc!
 										
    ========================================== */
 
-CREATE PROCEDURE [mtd].[master_generate_rdv] (@execute_sql INT = 0)
+CREATE PROCEDURE [mtd].[master_create_all_rdv] (@execute_sql INT = 0)
 AS
 BEGIN
 
@@ -26,84 +29,96 @@ BEGIN
 	DECLARE @sql NVARCHAR(max);
 	DECLARE @cnt INT = 0;
 
-WITH colist 
+with colhsat
 as (
-	SELECT 
+	select 
 		h.table_name,
-		h.hub_table_name,
 		h.schema_name, 
 		string_agg(h.column_name+' '+h.data_type+
-				   case when character_maximum_length is null then '' else '('+character_maximum_length+')' end +
-				   case when numeric_precision is null then '' else '('+numeric_precision+','+numeric_scale+')' end +
+				   case when h.character_maximum_length is null then '' else '('+h.character_maximum_length+')' end +
+				   case when h.numeric_precision is null then '' else '('+h.numeric_precision+','+h.numeric_scale+')' end +
 				   case is_nullable_ind when 0 then ' NOT NULL' else ' NULL' end , ',')
 		  within group (order by h.column_position) as column_list,
 		string_agg(h.column_name,',')
 		  within group (order by h.column_position) as column_ui_list
 	from adf.meta_hsat_mapping h
 	where h.active_ind = 1 
-	group by h.table_name, h.hub_table_name, h.schema_name 
-	),
-collnk 
+	group by h.table_name, h.schema_name
+),
+collnk
 as (
-	SELECT 
-		h.table_name,
-		string_agg(h.hub_table_name + '_hk VARCHAR(32) NOT NULL', ',' + char(13)) as column_list,
-		h.schema_name, 
-		string_agg(u.column_name + ' ' + u.data_type +
-				   case when character_maximum_length is null then '' else '(' + character_maximum_length + ')' end +
-				   case when numeric_precision is null then '' else '(' + numeric_precision+','+numeric_scale + ')' end +
+	select 
+		i.table_name,
+		i.schema_name, 
+		string_agg(h.table_name+'_hk '+h.data_type+
+				   case when h.character_maximum_length is null then '' else '('+h.character_maximum_length+')' end +
+				   case when h.numeric_precision is null then '' else '('+h.numeric_precision+','+h.numeric_scale+')' end +
 				   ' NOT NULL', ',')
-		  within group (order by h.column_position) as column_base_list,
-		string_agg(h.hub_table_name + '_hk', ',') 
-		  within group (order by h.column_position) as column_ui_list
-
-	from adf.meta_lnk_mapping h
-	left join adf.meta_hub_mapping u on u.table_name = h.hub_table_name
-	where h.active_ind = 1 
-	group by h.table_name, h.schema_name 
-	)
+		  within group (order by i.column_position) as column_list,
+		string_agg(h.table_name+'_hk ',',')
+		  within group (order by i.column_position) as column_ui_list
+	from adf.meta_lnk_mapping i
+	inner join adf.meta_hub_mapping h
+	   on i.hub_table_name = h.table_name
+	  and i.column_name = h.column_name
+	where i.active_ind = 1 
+	group by i.table_name, i.schema_name
+)
 	INSERT INTO @sql_table
-		SELECT --hub
+		SELECT -- hub
 			replace(
 				replace(
 					replace(
 						replace(g.core, '<column_ui_list>', h.column_name)
-					, '<column_statement_list>', h.column_name+' '+h.data_type+' NOT NULL')
-				, '<table_name>', h.table_name) 
-			, '<schema_name>', h.schema_name 
-			) + ';' + char(13)
-		from [mtd].[master_generator] g
-		cross join adf.meta_hub_mapping h
-		where g.generator_type = 'create_hub_table'
-		  and h.active_ind = 1 
-	UNION ALL
-		SELECT -- hsat
-			replace(
-				replace(
-				replace(
-					replace(
-						replace(g.core, '<column_ui_list>', h.column_ui_list)
-					, '<column_statement_list>', h.column_list) 
-				, '<hub_table_name>', h.hub_table_name) 
+						, '<column_statement_list>', h.column_name+' '+h.data_type+
+					   case when h.character_maximum_length is null then '' else '('+h.character_maximum_length+')' end +
+					   case when h.numeric_precision is null then '' else '('+h.numeric_precision+','+h.numeric_scale+')' end +
+					   ' NOT NULL')
 				, '<table_name>', h.table_name) 
 			, '<schema_name>', h.schema_name 
 			)
-		from [mtd].[master_generator] g
-		cross join colist h
-		where g.generator_type = 'create_hsat_table'
+		FROM [mtd].[master_generator] g
+		cross join adf.meta_hub_mapping h
+		where generator_type = 'create_hub_table'
+		  and h.active_ind = 1 
 	UNION ALL
-		SELECT 
-		replace(
+		SELECT DISTINCT -- hsat
 			replace(
 				replace(
-					replace(g.core, '<column_ui_list>', h.column_ui_list)
-				, '<column_statement_list>', h.column_list)
-			, '<table_name>', h.table_name) 
-		, '<schema_name>', h.schema_name 
-		)
+					replace(
+						replace(
+							replace(g.core, '<column_ui_list>', h.column_ui_list)
+						, '<column_statement_list>', h.column_list) 
+					, '<table_name>', h.table_name) 
+				, '<schema_name>', h.schema_name)
+			, '<hub_table_name>', u.table_name
+			) 
+		FROM [mtd].[master_generator] g
+		cross join colhsat h -- select * from 
+		inner join adf.meta_hsat_mapping s
+		   on h.table_name = s.table_name
+		  and s.column_position = 1
+		inner join adf.meta_hub_mapping u
+		   on u.table_name = s.hub_table_name
+		where g.generator_type = 'create_hsat_table'
+		  and s.active_ind = 1 
+	UNION ALL
+		SELECT -- lnk
+			replace(
+				replace(
+					replace(
+						replace(g.core, '<column_ui_list>', h.column_ui_list)
+					, '<column_statement_list>', h.column_list)
+				, '<table_name>', h.table_name) 
+			, '<schema_name>', h.schema_name 
+			) + char(10) + char(13)
 		FROM [mtd].[master_generator] g
 		cross join collnk h
+		inner join adf.meta_lnk_mapping s
+		   on h.table_name = s.table_name
+		  and s.column_position = 1
 		where generator_type = 'create_lnk_table'
+		  and active_ind = 1
 		/* todo 
 	UNION ALL
 		SELECT 

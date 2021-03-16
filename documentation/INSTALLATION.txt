@@ -14,7 +14,10 @@
 	This is ETL tool, that loads data and metadata files. It creates 2 blob containers: loaddata, metadata
 	Install in correct order: linked services, datasets, pielines, triggers
 	After pipelines installation, allow datafactory to access SQL server in the portal.
-4. Initialize Datavault
-	Connect to the database. in the \init_datavault execute: create schemas, master_generator, job_control, triggers
-5. Initialize Framework 
+4. Initialize Framework 
 	Start from wht_jobs table. Create whs procedures.
+		
+5. Initialize Datavault
+	Connect to the database
+	- in the \init_datavault execute: create schemas, master_generator, job_control, triggers
+	- move to the file GENERATOR

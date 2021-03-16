@@ -1,34 +1,34 @@
 DELETE FROM mtd.master_generator
-WHERE generator_type = 'sp_drop_hsat_table'
+WHERE generator_type = 'sp_drop_lnk_table'
 GO
 
 INSERT INTO mtd.master_generator (
  generator_type,
  core
 ) VALUES (
-'sp_drop_hsat_table',
+'sp_drop_lnk_table',
 '
 DROP PROCEDURE if exists [dbo].[sp_insert_<table_name>];
 ')
 GO
 
 DELETE FROM mtd.master_generator
-WHERE generator_type = 'sp_insert_hsat_table'
+WHERE generator_type = 'sp_insert_lnk_table'
 GO
 
 INSERT INTO mtd.master_generator (
  generator_type,
  core
 ) VALUES (
-'sp_insert_hsat_table',
+'sp_insert_lnk_table',
 '
 /* === sp_insert_<table_name> ===
    Author:		Generic by Mikołaj Paszkowski
-   Version:     2021-01-15	v.1.0	Initial version
-
+   Version:     2021-03-05	v.1.1	Initial version
+' + CHAR(13)+CHAR(10) + '
 */
 CREATE PROCEDURE [dbo].[sp_insert_<table_name>]
-				( @run_id NVARCHAR(8) = NULL )
+				( @run_id NVARCHAR(8) = NULL )' + CHAR(13)+CHAR(10) + '
 AS
 BEGIN TRY
 	SET NOCOUNT ON;
@@ -53,30 +53,32 @@ BEGIN TRY
 	SELECT @step_name = OBJECT_NAME(@@PROCID)	
 	/* -- Initialize job step */
 	EXEC dbo.whs_jobstep_init @step_name, @run_id, @step_uid = @step_uid_out OUTPUT
+
 	PRINT N''sp step uid: '' + convert(nvarchar(max), @step_uid_out) + '' sp_rdv_insert_<table_name>''
 	PRINT N''run id: '' + convert(nvarchar(max), @run_id)
 
+' + CHAR(13)+CHAR(10) + '
 	INSERT INTO <schema_name>.<table_name> 
-		(<hub_table_name>_hk, load_cycle_seq, record_source, insert_dts, changed_by, 
-		<column_ui_list>)
+		(<table_name>_hk, load_cycle_seq, record_source, insert_dts, changed_by, 
+		<column_ui_list>)' + CHAR(13)+CHAR(10) + '
 	SELECT 
-		COALESCE(CONVERT(char(32), HASHBYTES(''md5'',(CONVERT(NVARCHAR(MAX), stg.<bk_column_name>))), 2), 
-				 ''11111111111111111111111111111111'') as <hub_table_name>_hk,
+		COALESCE(CONVERT(char(32), HASHBYTES(''md5'',(CONVERT(NVARCHAR(MAX), <column_ui_semico>))), 2), 
+				 ''11111111111111111111111111111111'') as <table_name>_hk,
 		1,
 		''Step name '' + @step_name + '''',
 		@start_dttm,
 		@run_id,
-		<column_stg_list> 
-	FROM <stg_schema_name>.<stg_table_name> stg
+		<column_sch_list> 
+	FROM <from_stg_tables> 
+	  <on_stg_tables>
+	  <join_hub_tables>
 	LEFT JOIN <schema_name>.<table_name> u 
-	  ON COALESCE(CONVERT(char(32), HASHBYTES(''md5'',(CONVERT(NVARCHAR(MAX), stg.<bk_column_name>))), 2), 
-				 ''11111111111111111111111111111111'') = u.<hub_table_name>_hk
-	WHERE u.<hub_table_name>_hk IS NULL
-
+	  ON COALESCE(CONVERT(char(32), HASHBYTES(''md5'',(CONVERT(NVARCHAR(MAX), <column_ui_semico>))), 2), 
+				 ''11111111111111111111111111111111'') = u.<table_name>_hk /* check existing hk */
+	WHERE u.<table_name>_hk IS NULL 
 	SET @row_cnt = @@ROWCOUNT
-	
-	-- End step: Handle output */
-	PRINT ''sp finish. count: '' + cast(@row_cnt as varchar(50))
+
+	PRINT ''sp finish. count: '' + CAST(@row_cnt as VARCHAR(100))
 	EXEC dbo.whs_jobstep_finish @step_name, @run_id, @start_dttm, @row_cnt, @step_uid_out
 	RETURN 0;
 END TRY

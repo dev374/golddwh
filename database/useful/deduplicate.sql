@@ -22,13 +22,13 @@ WITH cte AS (
 					active_ind desc
 			) row_num
 		 FROM 
-			[adf].[meta_hub_mapping]
+			[adf].[meta_hsat_mapping]
 	)
 DELETE FROM cte
 WHERE row_num > 1
 
 -- check after deletion
-SELECT * FROM [adf].[meta_hub_mapping]
+SELECT * FROM [adf].[meta_hsat_mapping]
 -- COMMIT
 
 -- ROLLBACK

@@ -8,9 +8,9 @@
 2. Table holding definitions	
 	- c:\Dev\golddwh\database\init_datavault\master_generator.sql
 3. Core entries 
-	- c:\Dev\golddwh\metadata\master_entries\ = core definitions (skeletons) for hub, hsat, lnk, lsat,..
+	- c:\Dev\golddwh\metadata\master_generator\master_entries\ = core definitions (skeletons) for hub, hsat, lnk, lsat,..
 4. Import table mappings from the files
-	- c:\Dev\golddwh\metadata\generate_rdv\ = rdv tables DDLs joint with imported "meta_xxx_mapping" tables
+	- c:\Dev\golddwh\metadata\master_generator\generate_rdv\ = rdv tables DDLs joint with imported "meta_xxx_mapping" tables
 5. Or use sp_generate_rdv, having complete data model
 
 # Maintain data inserts to the tables

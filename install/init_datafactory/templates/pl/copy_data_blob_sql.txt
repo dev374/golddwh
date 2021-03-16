@@ -48,7 +48,9 @@
                     },
                     "sink": {
                         "type": "AzureSqlSink",
-                        "tableOption": "autoCreate"
+						"preCopyScript": "TRUNCATE TABLE adf.@{pipeline().Pipeline}",
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
                     },
                     "enableStaging": false
                 },

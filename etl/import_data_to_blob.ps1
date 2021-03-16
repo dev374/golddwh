@@ -126,45 +126,42 @@ ForEach ($p in $getpl) {
 	}
 }
 
-$flagloaddata = 0
-$flagmetadata = 0
-$flagdatamodel = 0
-$imparray = Get-ChildItem $importpath -File
+$curdate = Get-Date -Format yyyy-MM-dd_hhmmss
 
+# Convert to .csv
+$imparray = Get-ChildItem $importpath -File
 ForEach ($i in $imparray.Name) {
 	if($i -like "*.xlsx") {
         Convert-CsvInBatch $importpath
    		$i = $i -replace ".xlsx", ".csv"
     }
+}
 
-	if ($piparray.ContainsKey($i)) { 
-		if($i -like 'met*') { $flagmetadata = 1 }
-		if($i -like 'data_model*') { $flagdatamodel = 1 }
-		else { $flagloaddata = 1 }
-	}
-# Checks
-$i 
+# Send to Azure storage
+$imparray = Get-ChildItem $importpath -File | where {$_ -ne "*.xlsx"}
+ForEach ($i in $imparray.Name) {
+    
+	    if ($piparray.ContainsKey($i)) { 
+		    if($i -like 'meta*') { 
+                $blobdest = $blobendpointmetadata
+            }
+		    elseif($i -like 'data_model*') { 
+                $blobdest = $blobendpointmetadata
+            }
+		    else { 
+                $blobdest = $blobendpointloaddata
+            }
 
-# Copy when file has its pipeline, else message 'Pipeline for the file or import files not found'
- 	if($flagmetadata -eq 1) {
-        Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "met*.csv").ToLower() $($blobendpointmetadata + $saskey) --recursive=true
-    }
-	if($flagloaddata -eq 1) {
-        Write-Host "`n--> Copying data to the container: loaddata ($blobendpointloaddata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "dat*.csv").ToLower() $($blobendpointloaddata + $saskey) --recursive=true
-    }
- 	if($flagdatamodel -eq 1) {
-        Write-Host "`n--> Copying data to the container: metadata ($blobendpointmetadata)" -ForegroundColor Blue
-       .\azcopy copy $(Join-Path $importpath "data_model*.csv").ToLower() $($blobendpointmetadata + $saskey) --recursive=true
-    }
+            Write-Host "`n--> Copying data to the container: $blobdest" -ForegroundColor Blue
+            .\azcopy copy $(Join-Path $importpath $i).ToLower() $($blobdest + $saskey) --recursive=false
+	    }
+
 } 
 
 ########################
 # Archive
 ########################
-$curdate = Get-Date -Format yyyy-MM-dd_hhmmss
 $newfolder = New-Item -Path $(Join-Path $importpath "..\archive\$curdate") -ItemType Directory
-Write-Host "`n--> Archiving data in th folder: $newfolder " -ForegroundColor Green
+Write-Host "`n--> Archiving data in the folder: $newfolder " -ForegroundColor Green
 Move-Item $(Join-Path $importpath *.*) $newfolder
 sleep 1

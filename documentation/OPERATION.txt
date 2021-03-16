@@ -3,16 +3,23 @@
 ########################
 
 # How to create new ETL data load?
-1. You need to define Datasets and Pipelines in \config folder in pipelines and datasets .xlsx file 
-2. Typeid 1 is SQL, 2 Blobfile, 3 Blobfolder
-3. Install new interafaces (dst, src, pip, trg) with "install" 
-4. Create and edit data_model_mapping (sources) 
-5. Copy it as .xlsx or .csv and "run_import"
-6. Make sure Firewall settings are ok! = 
-run_import
- 
+- Firstly generate metadata
+	1. You need to define Datasets and Pipelines in \config folder in pipelines and datasets .xlsx file 
+	2. Typeid 1 is SQL, 2 Blobfile, 3 Blobfolder
+	3. Install new interafaces (dst, src, pip, trg) with "install" 
+	4. Create and edit data_model_mapping (sources) 
+	5. Copy it as .xlsx or .csv and "run_import"
+	6. Make sure Firewall settings are ok! = run_import
+- Then generate "master_generator"
+
+# Master generator
+1. Insert skeletons -> in "master_generator\master_entries\.."
+2. Create tables for rdv
+3. 
+
 # How to create new rdv tables?
-1. Execute stored procedure "master_generate_rdv"
+1. Execute scripts in "master_generator\generate_rdv\create... " // hub,hsat,lnk ; not done: lsat, etc..
+2. Combined scripts are in the stored procedure "sp_master_create_all_rdv" // not done
 
 # How to drop an existing table(s)?
 1. Execute sp "master_dropper_rdv"
@@ -23,8 +30,6 @@ run_import
 3. Each step is a sp. It has to have a structure like "[sp_list_job_control]".
 4. Each step should be entered into the wht_steps table, otherwise no logging occurs.
 5. There should be unique "job & step" entry. If a step should be repeated, then put into another job.
-
-# How to create new 
 
 # How to define a new job?
 

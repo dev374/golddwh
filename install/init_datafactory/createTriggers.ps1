@@ -125,7 +125,7 @@ $s = Stop-Triggers(Get-AllTriggers)
 
 $joinedObject = Foreach ($row in $pipelines) 
 {
-	$t = Create-Triggers-FromPipeline $row $overwrite = 0
+	$t = Create-Triggers-FromPipeline $row $overwrite = $pl_overwrite
 }
 
 $w = Start-Triggers(Get-AllTriggers)

@@ -6,10 +6,10 @@ INSERT INTO mtd.master_generator (
  generator_type,
  core
 ) VALUES (
- 'create_lnk_table',
+'create_lnk_table',
 'DROP TABLE if exists <schema_name>.<table_name>;'+
 'CREATE TABLE <schema_name>.<table_name> (
-	<table_name>_hk		VARCHAR(32)		NOT NULL, 
+	<table_name>_hk			VARCHAR(32)		NOT NULL, 
 	load_cycle_seq			INT				NOT NULL,
 	record_source			VARCHAR(100)	NOT NULL,
 	insert_dts				DATETIME		NOT NULL DEFAULT GETDATE(),
